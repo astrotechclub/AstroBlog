@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+  --font-size: 16px;
+  --image-unit-size: 10px;
+  --light-color: #DE30B7;
+  --dark-color: #6A1056;
+  --footer-gradient: linear-gradient(rgba(222, 48, 183, .8) -20%, rgba(106, 16, 86, .9) 40%);
+  --gradient-deg: 90deg;
+  --gradient: linear-gradient(var(--gradient-deg), var(--light-color), var(--dark-color) 100%);
+  --light: #d8dbe0;
+  --dark: #28292c;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: "Inter";
+  font-size: var(--font-size);
+  height: 100vh;
+  width: 100vw;
+}
+html body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+html body #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+html body #root .page-container {
+  height: 100%;
+  width: 100%;
+}
+
+::-moz-placeholder {
+  color: #ccc;
+  opacity: 1;
+}
+
+::placeholder {
+  color: #ccc;
+  opacity: 1;
+}
+
+#feed {
+  height: -moz-fit-content;
+  height: fit-content;
+  width: 100%;
+}
+
+#footer {
+  overflow: hidden;
+}
+#footer ::-moz-placeholder {
+  color: #eee;
+  opacity: 1;
+}
+#footer ::placeholder {
+  color: #eee;
+  opacity: 1;
+}
+#footer #footer-bg {
+  box-shadow: 0 0 45px var(--light-color);
+  height: max(100vh, 100vw);
+  width: max(100vh, 100vw);
+  border-radius: 50%;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  background-image: var(--footer-gradient), url("../../assets/images/moon.jpg");
+}
+
+@font-face {
+  font-family: "Nasalization";
+  src: url("../../assets/fonts/nasalization.ttf");
+}
+.logo {
+  font-family: "Nasalization";
+}/*# sourceMappingURL=feed.css.map */

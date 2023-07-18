@@ -1,0 +1,11 @@
+@import "../utils.scss";
+@include default_page_style();
+
+::placeholder {
+    color: #ccc;
+    opacity: 1;
+}
+
+@include footer();
+
+@include include_font();

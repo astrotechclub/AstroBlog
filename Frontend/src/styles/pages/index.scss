@@ -1,0 +1,13 @@
+@import "../utils.scss";
+@include default_page_style();
+@include include_font();
+
+#spans {
+    span {
+        font-family: $font-illustation-family;
+        color: transparent;
+        line-height: 7rem;
+        -webkit-text-stroke: 1px;
+        -webkit-text-stroke-color: rgba(255, 255, 255, 0.6);
+    }
+}
