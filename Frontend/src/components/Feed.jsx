@@ -10,7 +10,7 @@ function createArticleCards(articles, picturesUrl) {
     return articles.map(function (article) { return <ArticleCard infos={article} picturesUrl={picturesUrl} /> });
 }
 
-function Feed({ articles, maxArticlesPerPage, setArticles, isProfile, picturesUrl, host }) {
+function Feed({ articles, maxArticlesPerPage, setArticles, isProfile, picturesUrl, host, isFollower, community }) {
     const navigate = new useNavigate();
     const [max, setMax] = useState(maxArticlesPerPage);
     const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +53,7 @@ function Feed({ articles, maxArticlesPerPage, setArticles, isProfile, picturesUr
                     <img src={article} alt="articles" className="h-5 w-5" />
                     <h2 className="font-semibold text-big-title text-white">Articles</h2>
                 </div>
-                {!isProfile && <button className="flex flex-row items-center justify-center gap-2 border border-white py-2 px-4 rounded-md" onClick={() => navigate("/write_article")}>
+                {!isProfile && isFollower && <button className="flex flex-row items-center justify-center gap-2 border border-white py-2 px-4 rounded-md" onClick={() => navigate(`/write_article/${community}`)}>
                     <img src={feather} alt="write" className="h-4 w-4" />
                     <span className="text-white font-medium text-base">write</span>
                 </button>}

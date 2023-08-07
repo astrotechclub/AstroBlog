@@ -16,8 +16,7 @@ function createTags(tags) {
     });
 }
 
-function WriteArticleForm({ profile, host }) {
-    const community = 1; //to remove
+function WriteArticleForm({ host, community }) {
     const [tags, setTags] = useState([]);
     const [content, setContent] = useState("");
     const [inputs, setInputs] = useState({ community: community });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../assets/logo.svg";
 import bellIcon from "../assets/icons/bell-ring.png";
 import { useNavigate } from "react-router-dom";
@@ -10,29 +10,19 @@ import disconnectIcon from "../assets/icons/eteindre.png";
 
 function FeedNavBar({ profile, picturesUrl, host }) {
     const navigate = useNavigate();
-    const [notifications, setNotifications] = useState([
-        {
-            id: 1,
-            img: "https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1450&q=80", message: "New article in Astrotech club",
-            date: new Date(Date.now()).toUTCString(),
-            link: "/article/1",
-            seen: false
-        },
-        {
-            id: 2,
-            img: "https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1450&q=80", message: "New article in Astrotech club",
-            date: new Date(Date.now()).toUTCString(),
-            link: "/article/1",
-            seen: true
-        },
-    ]);
+    const [notifications, setNotifications] = useState([]);
     const [showNotification, setShowNotification] = useState(false);
     const [showDropDownMenu, setShowDropDownMenu] = useState(false);
 
-    const handleBellClick = () => { setShowNotification(prev => !prev); setShowDropDownMenu(false); }
+    const handleBellClick = () => {
+        if (notifications.length > 0) {
+            setShowNotification(prev => !prev);
+            setShowDropDownMenu(false);
+        }
+    }
 
     const notify = () => {
-        if (notifications.length === 0) {
+        if (allSeen(notifications)) {
             return <></>;
         } else {
             return <div id="notifications" className="h-[10px] w-[10px] rounded-[10px] bg-light-pink absolute right-0 top-0"></div>;
@@ -48,9 +38,28 @@ function FeedNavBar({ profile, picturesUrl, host }) {
         }
     }
 
+    useEffect(() => {
+        const fetchNotifications = (async () => {
+            const result = await fetch(`${host}/notification/mine`, { credentials: "include" });
+            result.json().then(data => {
+                setNotifications(data);
+            });
+        });
+        fetchNotifications();
+    }, []);
+
+
+    const allSeen = (notifications) => {
+        for (let i = 0; i < notifications.length; i++) {
+            const element = notifications[i];
+            if (!element.seen) return false;
+        }
+        return true;
+    }
+
     return (
         <div className="px-20 flex flex-row items-center justify-between gap-4 py-10">
-            <div className="flex flex-col items-center justify-center" onClick={() => {
+            <div className="flex flex-col items-center justify-center cursor-pointer" onClick={() => {
                 window.location.reload();
             }}>
                 <img src={logo} alt="logo" className="h-10 -rotate-logo" />
@@ -60,7 +69,7 @@ function FeedNavBar({ profile, picturesUrl, host }) {
             <div className="relative cursor-pointer min-w-[25px]">
                 <img src={bellIcon} alt="bell" className="h-6 w-6" onClick={handleBellClick} />
                 {notify()}
-                {showNotification && <Notifications notifications={notifications} />}
+                {showNotification && <Notifications notifications={notifications} host={host} />}
             </div>
             <div onClick={() => { setShowDropDownMenu(p => !p); setShowNotification(false); }} className="min-w-[80px] relative">
                 <img src={picturesUrl + profile.img} alt="profile" className="cursor-pointer rounded-full h-[60px] w-[60px] object-cover" />

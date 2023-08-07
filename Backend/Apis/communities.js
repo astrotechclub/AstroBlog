@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllCommunities, getCommunity, getUserCommunities, getUserSuggestions, unfollowCommunity, followCommunity } = require("../Controllers/communitiesController");
+const { getAllCommunities, getCommunity, getUserCommunities, getUserSuggestions, unfollowCommunity, followCommunity, getUsers } = require("../Controllers/communitiesController");
 const jwt = require("jsonwebtoken");
 
 const router = express.Router();
@@ -77,13 +77,32 @@ router.route("/suggestions/:id")
         res.send(result);
         next();
     })
+router.route("/users/:id")
+    .get(async (req, res, next) => {
+        const id = req.params.id;
+        const result = await getUsers(id);
+        res.send(result);
+        next();
+    })
 
 router.route("/:id")
     .get(async (req, res, next) => {
-        const id = req.params.id;
-        const comments = await getCommunity(id);
-        res.send(comments);
-        next();
+        const token = req.cookies.token;
+        jwt.verify(
+            token,
+            process.env.ACCESS_TOKEN_SECRET,
+            async (err, decoded) => {
+                if (err) {
+                    res.sendStatus(403);
+                } else {
+                    const user = decoded.userId;
+                    const id = req.params.id;
+                    const results = await getCommunity(id, user);
+                    res.send(results[0]);
+                    next();
+                }
+            }
+        );
     });
 
 

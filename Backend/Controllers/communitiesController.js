@@ -14,8 +14,11 @@ async function getAllCommunities() {
     return rows;
 }
 
-async function getCommunity(id) {
-    const [rows] = await pool.query("SELECT * from community where id = ?", [id]);
+async function getCommunity(id, user) {
+    let [rows] = await pool.query("SELECT * from community where id = ?", [id]);
+    const [row] = await pool.query("SELECT id_user from USER_COMMUNITY where id_user = ? and id_community = ?", [user, id]);
+    const isFollower = row[0] ? true : false;
+    rows[0] = { ...rows[0], "isFollower": isFollower };
     return rows;
 }
 
@@ -47,4 +50,9 @@ async function followCommunity(community, user) {
     return row2 ? row2 : row1;
 }
 
-module.exports = { getAllCommunities, getCommunity, getUserCommunities, getUserSuggestions, unfollowCommunity, followCommunity };
+async function getUsers(id) {
+    const [rows] = await pool.query("SELECT id , fullname , nb_likes, nb_publications , profile_pic from user where id in (SELECT id_user from USER_COMMUNITY where id_community = ?) ", [id]);
+    return rows;
+}
+
+module.exports = { getAllCommunities, getCommunity, getUserCommunities, getUserSuggestions, unfollowCommunity, followCommunity, getUsers };

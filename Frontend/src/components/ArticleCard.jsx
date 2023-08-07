@@ -10,10 +10,10 @@ function ArticleCard({ infos, picturesUrl }) {
         <div className="mt-10 border-b border-feed-border pb-4">
             <div className="flex flex-row items-center justify-start gap-4">
                 <div className="relative">
-                    <img src={picturesUrl + infos.community_profile} alt="community" className="h-[40px] w-[40px] rounded-[20px] object-cover" />
-                    <img src={picturesUrl + infos.user_profile} alt="user" className="h-[15px] w-[15px] rounded-[8px] absolute bottom-0 right-0 object-cover" />
+                    <img src={picturesUrl + infos.community_profile} alt="community" className="h-[40px] w-[40px] rounded-[20px] object-cover cursor-pointer" onClick={() => navigate(`/community/${infos.community_id}`)} />
+                    <img src={picturesUrl + infos.user_profile} alt="user" onClick={() => { navigate(`/profile/${infos.user_id}`) }} className="h-[15px] w-[15px] rounded-[8px] absolute bottom-0 right-0 object-cover cursor-pointer" />
                 </div>
-                <div>
+                <div onClick={() => navigate(`/profile/${infos.user_id}`)} className="cursor-pointer">
                     <span className="block text-small-subtitle text-white font-semibold">{infos.user_name} | {infos.community_name}</span>
                     <span className="block text-mini-text text-subtitle font-medium">{infos.user_publications} publications, {infos.user_likes} likes</span>
                 </div>

@@ -17,11 +17,11 @@ function ProfileSettings({ profile, setInputs, inputs, errors, setPicture, pictu
                         <input type="text" required name="fullname" defaultValue={profile.fullname} className="w-full text-white bg-transparent font-text text-small-subtitle border border-boder-grey p-2 rounded-md outline-none" placeholder="Yacine Touahria" onChange={e => setInputs({ ...inputs, "fullname": e.target.value })} />
                         <span className="h-4 text-errors text-xs">{errors.fullname}</span>
                     </div>
-                    <div className="mt-4">
+                    {/* <div className="mt-4">
                         <label className="text-white text-small-subtitle pb-1 pl-1 block">Email</label>
                         <input type="email" required name="email" defaultValue={profile.email} className="w-full text-white bg-transparent font-text text-small-subtitle border border-boder-grey p-2 rounded-md outline-none" placeholder="yacine_touahria@mail.com" onChange={e => setInputs({ ...inputs, "email": e.target.value })} />
                         <span className="h-4 text-errors text-xs">{errors.email}</span>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="relative">
                     <div className="w-48 h-48 overflow-hidden rounded-full">

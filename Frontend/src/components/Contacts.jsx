@@ -8,7 +8,6 @@ function Contacts({ userId, picturesUrl, host }) {
     const [suggestions, setSuggestions] = useState([]);
     const [my_communities, setMyCommunities] = useState([]);
     const navigate = new useNavigate();
-    const ourClubName = "Astrotech club";
 
     useEffect(() => {
         const fetchMyCommunites = async () => {
@@ -39,35 +38,36 @@ function Contacts({ userId, picturesUrl, host }) {
 
     const createSuggestions = () => {
         return suggestions.map(function (community) {
-            return <div className="flex flex-row items-center justify-between my-4 gap-2">
-                <div className="flex flex-row items-center justify-start gap-2 cursor-pointer">
+            return <div className="flex flex-row items-center justify-between my-4 gap-2" >
+                <div className="flex flex-row items-center justify-start gap-2 cursor-pointer" onClick={() => navigate(`/community/${community.id}`)}>
                     <img src={picturesUrl + community.img} alt="community" className="h-[40px] w-[40px] rounded-full object-cover" />
                     <div className="block">
                         <span className="block text-small-subtitle text-white font-semibold">{community.name}</span>
                         <span className="block text-mini-text text-subtitle font-medium">{community.followers} followers, {community.likes} likes</span>
                     </div>
                 </div>
-                <button className="border-2 rounded-md border-feed-border text-description text-mini-text text-medium px-4 py-2" onClick={(e) => { handleFollow(e.target, community.id) }}>follow</button>
+                <button className="border-2 rounded-md border-feed-border text-description text-mini-text font-medium px-4 py-2" onClick={(e) => { handleFollow(e.target, community.id) }}>follow</button>
             </div>;
         });
     }
+
     const createMyCommunities = () => {
         return my_communities.map(function (community) {
             return <div className="flex flex-row items-center justify-between my-4 gap-2">
-                <div className="flex flex-row items-center justify-start gap-2 cursor-pointer">
+                <div className="flex flex-row items-center justify-start gap-2 cursor-pointer" onClick={() => navigate(`/community/${community.id}`)}>
                     <img src={picturesUrl + community.img} alt="community" className="h-[40px] w-[40px] rounded-full object-cover" />
                     <div className="block">
                         <span className="block text-small-subtitle text-white font-semibold">{community.name}</span>
                         <span className="block text-mini-text text-subtitle font-medium">{community.followers} followers, {community.likes} likes</span>
                     </div>
                 </div>
-                {community.name != ourClubName && <button className="border-2 rounded-md border-feed-border text-description text-mini-text text-medium px-4 py-2" onClick={(e) => { handleUnfollow(e.target, community.id); }}>unfollow</button>}
+                {community.id != 1 && <button className="border-2 rounded-md border-feed-border text-description text-mini-text font-medium px-4 py-2" onClick={(e) => { handleUnfollow(e.target, community.id); }}>unfollow</button>}
             </div>;
         });
     }
 
     const handleUnfollow = (button, id) => {
-        const url = "http://localhost:5000/communities/unfollow";
+        const url = `${host}/communities/unfollow`;
         button.parentElement.remove();
         axios.post(url, { community: id }, { withCredentials: true }).then(res => {
             if (res.data.errors) {
@@ -80,7 +80,7 @@ function Contacts({ userId, picturesUrl, host }) {
 
     }
     const handleFollow = (button, id) => {
-        const url = "http://localhost:5000/communities/follow";
+        const url = `${host}/communities/follow`;
         button.parentElement.remove();
         axios.post(url, { community: id }, { withCredentials: true }).then(res => {
             if (res.data.errors) {

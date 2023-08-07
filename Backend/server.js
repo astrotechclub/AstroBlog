@@ -13,6 +13,7 @@ const logout = require("./Apis/logout");
 const home = require("./Apis/home")
 const user = require("./Apis/user");
 const picture = require("./Apis/picture");
+const notification = require("./Apis/notification");
 
 const { Client } = require('@elastic/elasticsearch');
 
@@ -45,9 +46,10 @@ app.use("/logout", logout);
 app.use("/home", home);
 app.use("/user", user);
 app.use("/picture", picture);
+app.use("/notification", notification);
 
 app.get("/", (req, res) => {
-  res.status(200).send("This is the route of the backend server");
+  res.status(200).send("ok");
 });
 
 const indexName = process.env.ELASTICSEARCH_INDEX;

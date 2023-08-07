@@ -125,10 +125,10 @@ function Article() {
                             </div>
                             <div className="flex flex-row justify-start items-center gap-4">
                                 <div className="relative">
-                                    <img src={picturesUrl + article.community_profile} alt="community" className="h-[55px] w-[55px] rounded-[27.5px] object-cover" />
-                                    <img src={picturesUrl + article.user_profile} alt="author" className="h-[20px] w-[20px] rounded-[10px] absolute bottom-0 right-0 object-cover" />
+                                    <img src={picturesUrl + article.community_profile} alt="community" className="h-[55px] w-[55px] rounded-[27.5px] object-cover cursor-pointer" onClick={() => navigate(`/community/${article.community_id}`)} />
+                                    <img src={picturesUrl + article.user_profile} alt="author" className="h-[20px] w-[20px] rounded-[10px] absolute bottom-0 right-0 object-cover cursor-pointer" onClick={() => navigate(`/profile/${article.user_id}`)} />
                                 </div>
-                                <div className="flex flex-col gap-1 justify-start items-start">
+                                <div className="flex flex-col gap-1 justify-start items-start cursor-pointer" onClick={() => navigate(`/profile/${article.user_id}`)}>
                                     <span className="block text-small-subtitle text-white font-semibold">{article.user_name} | {article.community_name}</span>
                                     <span className="block text-mini-text text-subtitle font-medium">{article.user_publications} publications, {article.user_likes} likes</span>
                                 </div>

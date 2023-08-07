@@ -6,13 +6,14 @@ import WriteArticleForm from "../components/WriteArticleForm";
 import { useState, useEffect } from "react";
 import SmoothScroll from "../components/SmoothScroll";
 import LoadingPage from "../components/LoadingPage";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function WriteArticle() {
     const navigate = useNavigate();
     const [profile, setProfile] = useState();
     const host = "http://localhost:5000";
     const picturesUrl = `${host}/picture/`;
+    const community = useParams().id;
 
     useEffect(() => {
         const fetchProfile = (async () => {
@@ -39,7 +40,7 @@ function WriteArticle() {
                             <img src={feather} alt="top articles" className="h-5 w-5" />
                             <h2 className="font-semibold text-big-title text-white">New Article</h2>
                         </div>
-                        <WriteArticleForm profile={profile} host={host} />
+                        <WriteArticleForm host={host} community={community} />
                     </div>
                     <Footer />
                 </div>

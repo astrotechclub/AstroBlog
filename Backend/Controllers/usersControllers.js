@@ -28,8 +28,21 @@ async function addNewUser(user) {
         sql = "INSERT INTO user (email,fullname,is_admin,category,user_password) values (?,?,0,?,?)";
         inputs.push(user.email, user.fullname, user.about, password);
     }
-    const result = await pool.query(sql, inputs);
-    return result;
+    const [result] = await pool.query(sql, inputs);
+    const row2 = followAstrotech(result);
+    return row2;
+}
+
+async function followAstrotech(row1) {
+    let row2 = undefined;
+    if (row1 && row1.affectedRows > 0) {
+        [row2] = await pool.query("INSERT INTO user_community (id_user , id_community) values (? ,?)", [row1.insertId, 1]);
+    }
+    let row3 = undefined;
+    if (row2 && row2.affectedRows > 0) {
+        [row3] = await pool.query("UPDATE community set nb_followers = nb_followers +1 where id = ?", [1]);
+    }
+    return row3 ? row3 : row2 ? row2 : row1
 }
 
 async function getPassword(email) {
@@ -64,25 +77,25 @@ async function getUserProfile(id) {
 
 async function updateUser(id, inputs) {
     let sql = "";
-    let params = [inputs.email, inputs.fullname];
+    let params = [inputs.fullname];
     if (inputs?.bio) {
         params = [...params, inputs.bio];
         if (inputs?.new_psw) {
             const salt = await bcrypt.genSalt(10);
             const password = await bcrypt.hash(inputs.new_psw, salt);
             params = [...params, password];
-            sql = "UPDATE user set email = ?, fullname = ?, bio = ? , user_password = ? where id = ?";
+            sql = "UPDATE user set fullname = ?, bio = ? , user_password = ? where id = ?";
         } else {
-            sql = "UPDATE user set email = ?, fullname = ?, bio = ? where id = ?";
+            sql = "UPDATE user set fullname = ?, bio = ? where id = ?";
         }
     } else {
         if (inputs?.new_psw) {
             const salt = await bcrypt.genSalt(10);
             const password = await bcrypt.hash(inputs.new_psw, salt);
             params = [...params, password];
-            sql = "UPDATE user set email = ?, fullname = ?, user_password = ? where id = ?";
+            sql = "UPDATE user set fullname = ?, user_password = ? where id = ?";
         } else {
-            sql = "UPDATE user set email= ?, fullname = ? where id = ?";
+            sql = "UPDATE user set fullname = ? where id = ?";
         }
     }
     let row = undefined;

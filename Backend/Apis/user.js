@@ -7,12 +7,6 @@ const multer = require("multer");
 const upload = multer({ dest: "ProfilePictures/" });
 const fs = require("fs");
 
-router.route("/")
-    .get(async (req, res, next) => {
-        res.sendStatus(401);
-        next();
-    });
-
 router.route("/mine")
     .get(async (req, res, next) => {
         const token = req.cookies.token;

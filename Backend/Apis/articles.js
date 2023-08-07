@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllArticles, getArticleWithContent, createArticle, updateLikes, getIfLikeArticle, updateDislikes, getIfDislikeArticle, getTopArticles, getUserArticles, getMyArticles } = require("../Controllers/articlesController");
+const { getAllArticles, getArticleWithContent, createArticle, updateLikes, getIfLikeArticle, updateDislikes, getIfDislikeArticle, getTopArticles, getUserArticles, getMyArticles, getCommunityArticles } = require("../Controllers/articlesController");
 const checkArticleExistance = require("../Middlewares/checkArticleExistance");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
@@ -175,6 +175,24 @@ router.route("/mine/-:max")
                 }
             }
         );
+    });
+
+router.route("/:user/-:max")
+    .get(async (req, res, next) => {
+        const max = parseInt(req.params.max);
+        const user = parseInt(req.params.user);
+        const result = await getMyArticles(user, max);
+        res.send({ articles: result, userId: req.userId });
+        next();
+    });
+
+router.route("/community/:id/-:max")
+    .get(async (req, res, next) => {
+        const max = parseInt(req.params.max);
+        const id = parseInt(req.params.id);
+        const result = await getCommunityArticles(id, max);
+        res.send({ articles: result, userId: req.userId });
+        next();
     });
 
 router.route("/:id")

@@ -22,7 +22,7 @@ function AddComment({ profile, picturesUrl, host }) {
     }
     return (
         <div className="px-20 flex flex-row justify-center items-center gap-2">
-            <img src={picturesUrl + profile.img} alt="profile" className="h-[30px] w-[30px] object-cover rounded-full" />
+            <img src={picturesUrl + profile.img} alt="profile" className="h-[30px] w-[30px] object-cover rounded-full cursor-pointer" onClick={() => navigate("/profile")} />
             <form action="" onSubmit={handleSubmit}>
                 <div className="flex flex-row gap-2 justify-start items-center pb-2 border-b-2 border-feed-border w-[400px] relative">
                     <input type="text" placeholder="Add comment" required className="bg-transparent border-none outline-none text-mini-text w-full" onChange={(e) => setInputs({ ...inputs, comment_text: e.target.value })} />

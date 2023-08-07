@@ -19,11 +19,6 @@ const validateInputs = async (req, res, next) => {
     if (!req.body.fullname || req.body.fullname.length < 8 || !isNaN(req.body.fullname)) {
         errors = { ...errors, fullname: "this is not a valid fullname!" };
     }
-    const emailRegEx = new RegExp(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/);
-    const emailCheck = await isMyEmail(req.body.email);
-    if (!req.body.email || !emailRegEx.test(req.body.email) || emailCheck) {
-        errors = { ...errors, email: "Wrong e-mail address!" };
-    }
     if (req.body.new_psw) {
         const token = req.cookies.token;
         jwt.verify(

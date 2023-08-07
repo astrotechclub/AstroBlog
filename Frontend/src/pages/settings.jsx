@@ -27,7 +27,7 @@ function Settings() {
             if (result.status == 404) navigate("/E404");
             result.json().then(data => {
                 setProfile(data);
-                setInputs({ "email": data.email, "fullname": data.fullname })
+                setInputs({ "fullname": data.fullname })
             }).catch(e => console.log(e));
         });
         fetchProfile();

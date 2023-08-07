@@ -10,12 +10,12 @@ const pool = mysql.createPool({
 }).promise();
 
 async function getAllComments() {
-    const [rows] = await pool.query("SELECT c.id ,article, u.fullname as user_name , u.nb_publications as user_publications ,u.nb_likes as user_likes , u.profile_pic as user_pic , DATE_FORMAT(date_time, '%M %e, %Y') as date , DATE_FORMAT(date_time, '%H:%i') as time  , comment_text as text from comment as c join user u on u.id = c.user order by date_time desc");
+    const [rows] = await pool.query("SELECT c.id ,article,u.id as user_id , u.fullname as user_name , u.nb_publications as user_publications ,u.nb_likes as user_likes , u.profile_pic as user_pic , DATE_FORMAT(date_time, '%M %e, %Y') as date , DATE_FORMAT(date_time, '%H:%i') as time  , comment_text as text from comment as c join user u on u.id = c.user order by date_time desc");
     return rows;
 }
 
 async function getArticleComments(id) {
-    const [rows] = await pool.query("SELECT c.id ,article, u.fullname as user_name , u.nb_publications as user_publications ,u.nb_likes as user_likes , u.profile_pic as user_pic , DATE_FORMAT(date_time, '%M %e, %Y') as date , DATE_FORMAT(date_time, '%H:%i') as time  , comment_text as text from comment as c join user u on u.id = c.user where article = ? order by date_time desc", [id]);
+    const [rows] = await pool.query("SELECT c.id ,article,u.id as user_id, u.fullname as user_name , u.nb_publications as user_publications ,u.nb_likes as user_likes , u.profile_pic as user_pic , DATE_FORMAT(date_time, '%M %e, %Y') as date , DATE_FORMAT(date_time, '%H:%i') as time  , comment_text as text from comment as c join user u on u.id = c.user where article = ? order by date_time desc", [id]);
     return rows;
 }
 
@@ -30,7 +30,7 @@ async function AddComment(user, comment, article) {
 }
 
 async function getMaxComments(id, max) {
-    const [rows] = await pool.query("SELECT c.id ,article, u.fullname as user_name , u.nb_publications as user_publications ,u.nb_likes as user_likes , u.profile_pic as user_pic , DATE_FORMAT(date_time, '%M %e, %Y') as date , DATE_FORMAT(date_time, '%H:%i') as time  , comment_text as text from comment as c join user u on u.id = c.user where article = ? order by date_time desc limit ?", [id, max]);
+    const [rows] = await pool.query("SELECT c.id ,article,u.id as user_id, u.fullname as user_name , u.nb_publications as user_publications ,u.nb_likes as user_likes , u.profile_pic as user_pic , DATE_FORMAT(date_time, '%M %e, %Y') as date , DATE_FORMAT(date_time, '%H:%i') as time  , comment_text as text from comment as c join user u on u.id = c.user where article = ? order by date_time desc limit ?", [id, max]);
     return rows;
 }
 

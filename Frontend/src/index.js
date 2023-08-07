@@ -7,9 +7,10 @@ import Settings from './pages/settings';
 import Article from './pages/article';
 import E404 from "./pages/E404";
 import WriteArticle from "./pages/writeArticle";
-
+import User from "./pages/user";
 import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
 import Profile from './pages/profile';
+import Community from "./pages/community";
 
 const router = createBrowserRouter([
   {
@@ -35,11 +36,19 @@ const router = createBrowserRouter([
     element: <Article />
   },
   {
-    path: '/write_article',
+    path: '/write_article/:id',
     element: <WriteArticle />
   }, {
     path: '/profile',
     element: <Profile />
+  },
+  {
+    path: '/profile/:id',
+    element: <User />
+  },
+  {
+    path: '/community/:id',
+    element: <Community />
   },
   {
     path: '/E404',
