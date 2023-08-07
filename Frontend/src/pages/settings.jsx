@@ -83,7 +83,7 @@ function Settings() {
                         <SettingsContent profile={profile} handleEditProfile={handleEditProfile} setInputs={setInputs} inputs={inputs} errors={errors} setPicture={setPicture} picturesUrl={picturesUrl} />
                         <div className="w-full h-full"></div>
                     </div>
-                    <Footer />
+                    <Footer profile={profile} />
                 </div>
             </div>
                 : <LoadingPage />

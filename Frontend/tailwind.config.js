@@ -8,12 +8,15 @@ module.exports = {
       lineHeight: {
         'big': '250px'
       },
+      invert: {
+        'grey': ".7"
+      },
       colors: {
         'text': 'black',
         'grey': '#393939',
         'transparent': '#ffffff00',
         'white': '#ffffff',
-        'boder-grey': '#E4E4E4',
+        'border-grey': '#E4E4E4',
         'input-light-grey': '#F8F8F8',
         'errors': 'red',
         'light-pink': '#DE30B7',

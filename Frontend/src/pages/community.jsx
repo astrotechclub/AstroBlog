@@ -147,7 +147,7 @@ function Community() {
                                 <Followers community={community_id} host={host} picturesUrl={picturesUrl} />
                             </div>
                         </div>
-                        <Footer />
+                        <Footer profile={profile} />
                     </div>
                 </div > : <LoadingPage />
             }

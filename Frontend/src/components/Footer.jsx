@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import logo from "../assets/logo.svg";
 import esiLogo from "../assets/icons/esi.png";
 import moonBg from "../assets/images/moon.jpg";
+import emailjs from '@emailjs/browser';
 
-function Footer() {
+function Footer({ profile }) {
+    const [message, setMessage] = useState();
+    const email = profile.email;
+    const form = useRef();
+    const sendEmail = (e) => {
+        e.preventDefault();
+        emailjs.sendForm('service_wg3dy3t', 'template_6zpv402', form.current, 'MY_PUBLIC_KEY')
+            .then((result) => {
+                console.log(result.text);
+            }, (error) => {
+                console.log(error.text);
+            });
+    }
     return (
         <div id="footer" className="pt-24 relative px-[20%]" >
             <div id="footer-bg">
@@ -32,9 +45,10 @@ function Footer() {
                         <p className="block text-description text-small-subtitle">École Nationale Supérieure d’Informatique, BP 68M, 16270, Oued Smar, Algérie</p>
                     </div>
                     <div>
-                        <form action="" method="post">
-                            <textarea name="message" cols="30" rows="10" placeholder="Write something to us ..." className="resize-none bg-textarea border-2 border-white rounded-md outline-none p-2 h-20 text-mini-text mb-2 w-full text-white"></textarea>
-                            <input type="submit" value="send to astrotech@esi.dz" className="bg-light-pink p-2 rounded-md w-full text-small-subtitle cursor-pointer text-white" />
+                        <form ref={form} onSubmit={sendEmail}>
+                            <input type="hidden" name="from_name" value={email} />
+                            <textarea name="message" cols="30" rows="10" placeholder="Write something to us ..." className="resize-none bg-textarea border-2 border-white rounded-md outline-none p-2 h-20 text-mini-text mb-2 w-full text-white" onChange={(e) => setMessage(e.target.value)}></textarea>
+                            {message && message.length > 10 ? <input type="submit" value={"send to astrotech@esi.dz"} className="bg-light-pink p-2 box-border rounded-md w-full text-small-subtitle cursor-pointer text-white" /> : <input type="submit" value={"send to astrotech@esi.dz"} className="bg-dark-pink p-2 box-border rounded-md w-full text-small-subtitle text-white" disabled />}
                         </form>
                     </div>
                 </div>

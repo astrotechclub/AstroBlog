@@ -107,7 +107,7 @@ function Profile() {
                             <Feed articles={articles} maxArticlesPerPage={maxArticlesPerPage} setArticles={setArticles} isProfile={true} picturesUrl={picturesUrl} host={host} />
                             <div></div>
                         </div>
-                        <Footer />
+                        <Footer profile={profile} />
                     </div>
                 </div > : <LoadingPage />
             }

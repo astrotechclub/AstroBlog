@@ -42,7 +42,7 @@ function WriteArticle() {
                         </div>
                         <WriteArticleForm host={host} community={community} />
                     </div>
-                    <Footer />
+                    <Footer profile={profile} />
                 </div>
             </div > : <LoadingPage />
             }

@@ -75,7 +75,7 @@ function Home() {
                                 <Contacts userId={profile.id} picturesUrl={picturesUrl} host={host} />
                             </div>
                         </div>
-                        <Footer />
+                        <Footer profile={profile} />
                     </div>
                 </div> : <LoadingPage />
             }

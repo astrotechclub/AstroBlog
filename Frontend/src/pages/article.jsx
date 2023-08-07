@@ -14,7 +14,7 @@ import LoadingPage from "../components/LoadingPage";
 import LoadingComponent from "../components/LoadingComponent";
 
 function Article() {
-    const [theme, setTheme] = useState({ theme: "dark" });
+    const [dark, setTheme] = useState(true);
     const [article, setArticle] = useState();
     const [comments, setComments] = useState();
     const [profile, setProfile] = useState();
@@ -78,7 +78,7 @@ function Article() {
     const switchTheme = (event) => {
         let checkbox = event.target;
         checkbox.classList.toggle("checked");
-        if (checkbox.classList.contains("checked")) { setTheme({ theme: "light" }) } else { setTheme({ theme: "dark" }); };
+        if (checkbox.classList.contains("checked")) { setTheme(true) } else { setTheme(false); };
     }
 
     const createFields = (article) => {
@@ -109,7 +109,7 @@ function Article() {
     return (
         <>
             {
-                article ? <div className="bg-gradient-to-b from-page-light-dark to-page-dark relative text-white" key={article.id}>
+                article ? <div className={`${dark ? "bg-gradient-to-b from-page-light-dark to-page-dark text-white" : "bg-white text-black"} relative`} key={article.id}>
                     <SmoothScroll />
                     <div className="relative z-10 min-h-[100vh]">
                         <div className="h-96 w-full">
@@ -119,17 +119,14 @@ function Article() {
                             <NavBar profile={profile} picturesUrl={picturesUrl} host={host} />
                         </div>
                         <div className="px-20 py-10 flex flex-row items-start justify-between gap-4">
-                            <div className="flex flex-row gap-2 items-center justify-start">
-                                <span className="block text-[18px] text-md font-semibold">A a</span>
-                                <input className="block w-24" type="range" min="12" max="20" step="2" />
-                            </div>
+                            <div></div>
                             <div className="flex flex-row justify-start items-center gap-4">
                                 <div className="relative">
                                     <img src={picturesUrl + article.community_profile} alt="community" className="h-[55px] w-[55px] rounded-[27.5px] object-cover cursor-pointer" onClick={() => navigate(`/community/${article.community_id}`)} />
                                     <img src={picturesUrl + article.user_profile} alt="author" className="h-[20px] w-[20px] rounded-[10px] absolute bottom-0 right-0 object-cover cursor-pointer" onClick={() => navigate(`/profile/${article.user_id}`)} />
                                 </div>
                                 <div className="flex flex-col gap-1 justify-start items-start cursor-pointer" onClick={() => navigate(`/profile/${article.user_id}`)}>
-                                    <span className="block text-small-subtitle text-white font-semibold">{article.user_name} | {article.community_name}</span>
+                                    <span className="block text-small-subtitle font-semibold">{article.user_name} | {article.community_name}</span>
                                     <span className="block text-mini-text text-subtitle font-medium">{article.user_publications} publications, {article.user_likes} likes</span>
                                 </div>
                             </div>
@@ -142,7 +139,7 @@ function Article() {
                                 </div>
                             </div>
                         </div>
-                        <AddComment profile={profile} picturesUrl={picturesUrl} host={host} />
+                        <AddComment profile={profile} picturesUrl={picturesUrl} host={host} dark={dark} />
                         <div className="grid grid-cols-6 grid-rows-1 w-full mt-10 px-20 gap-4">
                             <div></div>
                             <div className="col-span-4">
@@ -156,26 +153,26 @@ function Article() {
                                     <ReactMarkdown>{article.content}</ReactMarkdown>
                                 </div>
                                 <div className="mt-12 mb-4">
-                                    <div className="border-b-2 border-feed-border pb-2 flex flex-row justify-start items-center gap-4">
-                                        <img src={commentsIcon} alt="comment" className="h-[25px] w-[25px] block" />
-                                        <span className="block text-white font-semibold text-card-title">Comments</span>
+                                    <div className={`border-b-2 ${dark ? "border-feed-border" : "border-black"} pb-2 flex flex-row justify-start items-center gap-4`}>
+                                        <img src={commentsIcon} alt="comment" className={`h-[25px] w-[25px] block ${dark ? null : "invert"}`} />
+                                        <span className="block font-semibold text-card-title">Comments</span>
                                     </div>
-                                    {comments && < Comments comments={comments} picturesUrl={picturesUrl} />}
+                                    {comments && < Comments comments={comments} picturesUrl={picturesUrl} dark={dark} />}
                                 </div>
                                 {comments && comments.length === max && <>
                                     <dir className="w-full flex justify-center items-center">
-                                        <button className="mt-8 flex flex-row items-center justify-center gap-4 border-2 px-4 py-2 rounded-md border-feed-border bg-load-more" onClick={handleLoadMore}>
-                                            <img className="h-4 w-4 opacity-70" src={loadMoreImg} alt="load more" />
+                                        <button className={`mt-8 flex flex-row items-center justify-center gap-4 border-2 px-4 py-2 rounded-md ${dark ? "border-feed-border" : "border-border-grey"} bg-load-more`} onClick={handleLoadMore}>
+                                            <img className={`h-4 w-4 opacity-70 ${dark ? null : "invert-grey"}`} src={loadMoreImg} alt="load more" />
                                             <span className="text-description font-semibold">Load more..</span>
                                         </button>
                                     </dir>
                                 </>
                                 }
-                                {isLoading && <LoadingComponent />}
+                                {isLoading && <LoadingComponent dark={dark} />}
                             </div>
-                            <Reviews alikes={article.article_likes} adislikes={article.article_dislikes} articleId={articleId} author={article.user_name} community={article.community_name} host={host} />
+                            <Reviews alikes={article.article_likes} adislikes={article.article_dislikes} articleId={articleId} author={article.user_name} community={article.community_name} host={host} dark={dark} />
                         </div>
-                        <Footer></Footer>
+                        <Footer profile={profile} />
                     </div>
                 </div > : <LoadingPage />
             }

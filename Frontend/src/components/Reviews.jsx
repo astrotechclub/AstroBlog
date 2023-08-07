@@ -35,7 +35,7 @@ function updateDislikes(action, id, author, community, host, navigate) {
     }).catch(err => { console.log(err.response.data); });
 }
 
-function Reviews({ alikes, adislikes, articleId, author, community, host }) {
+function Reviews({ alikes, adislikes, articleId, author, community, host, dark }) {
     const [likes, setLikes] = useState(alikes);
     const [dislikes, setDislikes] = useState(adislikes);
     const [likesChanged, setLikesChanged] = useState();
@@ -104,11 +104,11 @@ function Reviews({ alikes, adislikes, articleId, author, community, host }) {
         <>
             {(dislikesChanged === true || dislikesChanged === false) && (likesChanged === true || likesChanged === false) && < div className="flex flex-row items-start justify-center gap-4" >
                 <div className="flex flex-col justify-center items-center gap-2">
-                    <img src={likesChanged ? likesFillIcon : likesIcon} alt="like" className="h-[25px] w-[25px] opacity-75 cursor-pointer" onClick={handleLike} />
+                    <img src={likesChanged ? likesFillIcon : likesIcon} alt="like" className={`h-[25px] w-[25px] opacity-75 cursor-pointer ${dark ? null : "invert-grey"}`} onClick={handleLike} />
                     <span className="text-description font-medium text-mini-text">{likes} likes</span>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-2">
-                    <img src={dislikesChanged ? likesFillIcon : likesIcon} alt="dislike" className="rotate-180 h-[25px] w-[25px] opacity-75 cursor-pointer" onClick={handleDislike} />
+                    <img src={dislikesChanged ? likesFillIcon : likesIcon} alt="dislike" className={`rotate-180 h-[25px] w-[25px] opacity-75 cursor-pointer ${dark ? null : " invert-grey"}`} onClick={handleDislike} />
                     <span className="text-description font-medium text-mini-text">{dislikes} dislikes</span>
                 </div>
 
