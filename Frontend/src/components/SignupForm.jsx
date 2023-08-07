@@ -7,13 +7,11 @@ import passwordIcon from '../assets/icons/password.png';
 import googleLogo from '../assets/icons/google.png';
 import emailIcon from '../assets/icons/email.png';
 
-function SignupForm({ host }) {
-    const [inputs, setInputs] = useState();
+function SignupForm({ host, blur, setShowConfMessage, setEmail, inputs, setInputs }) {
     const [checkedTerms, setCheckedTerms] = useState(false);
     const [showWhoRU, setShowWhoRU] = useState(false);
     const [errors, setErrors] = useState();
-    const url = `${host}/register`;
-    const navigate = useNavigate();
+    const url = `${host}/register/validate`;
     const handleSubmit = (event) => {
         setErrors({});
         event.preventDefault();
@@ -24,12 +22,12 @@ function SignupForm({ host }) {
                 console.log(res.data.errors);
             }
             if (res.status === 200) {
-                navigate("/home");
+                setShowConfMessage(true);
             }
         }).catch(err => { setErrors(err.response.data); });
     }
     return (
-        <div className="px-20 py-5 flex flex-col items-start justify-between">
+        <div className={`px-20 py-5 flex flex-col items-start justify-between ${blur ? "blur-sm" : null}`} >
             <div className='flex flex-row justify-start items-center gap-2 mb-10'>
                 <img src={logo} alt="logo" className='h-8 w-8 invert -rotate-logo' />
                 <span className='font text-lg font-medium text-text font-semibold logo'>Astrotech</span>
@@ -46,7 +44,7 @@ function SignupForm({ host }) {
                         {errors.fullname}
                     </div>}
                     <div className='p-4 border border-boder-grey rounded-md bg-input-light-grey w-3/4 flex flex-row items-center justify-between mt-4'>
-                        <input type="email" name="email" placeholder='email' onChange={(event) => { setInputs({ ...inputs, email: event.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
+                        <input type="email" name="email" placeholder='email' onChange={(event) => { setInputs({ ...inputs, email: event.target.value }); setEmail(event.target.value); }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
                         <img src={emailIcon} alt="email" className='inline h-4 w-4' />
                     </div>
                     {errors && errors.email && <div className='w-3/4 text-xs text-errors mt-1'>
