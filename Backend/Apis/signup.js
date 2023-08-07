@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 router.route("/")
-    .post(checkNewUser, async (req, res, next) => {
+    .post(async (req, res, next) => {
         const user = req.body;
         const result = await addNewUser(user);
         if (result.affectedRows > 0) {
@@ -34,4 +34,9 @@ router.route("/")
         }
     });
 
+router.route("/validate")
+    .post(checkNewUser, (req, res, next) => {
+        res.status(200).send({ ok: true });
+        next();
+    })
 module.exports = router;

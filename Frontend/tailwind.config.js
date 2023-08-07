@@ -29,7 +29,8 @@ module.exports = {
         'description': '#C2C2C2',
         'textarea': '#ffffff34',
         'load-more': '#ffffff20',
-        'transparent-pink': '#DE30B790'
+        'transparent-pink': '#DE30B790',
+        'blur': '#c9c9c9a0'
       },
       fontSize: {
         '5xl': '9rem',
