@@ -34,7 +34,7 @@ function Feed({ articles, maxArticlesPerPage, setArticles, isProfile, picturesUr
             } else {
                 if (result.status === 200) {
                     result.json().then(json => {
-                        setArticles(json.articles);
+                        setArticles(json);
                     });
                 } else {
                     navigate("/E404");

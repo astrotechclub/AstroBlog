@@ -20,6 +20,9 @@ function Home() {
     const picturesUrl = `${host}/picture/`;
     const navigate = useNavigate();
 
+    console.log(articles);
+
+
     useEffect(() => {
         const fetchArticles = async () => {
             var result = await fetch(`${host}/articles/-${maxArticlesPerPage}`, { credentials: "include" });
