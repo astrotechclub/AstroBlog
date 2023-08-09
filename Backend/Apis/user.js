@@ -60,13 +60,15 @@ router.route("/updatePicture")
                 } else {
                     const user = decoded.userId;
                     const result = await updateUserPicture(user, req.file.filename);
-                    const imgPath = path.join(__dirname, "..", "AllPictures", result);
-                    try {
-                        fs.unlink(imgPath);
-                        return res.status(200).send('File deleted successfully');
-                    } catch (err) {
-                        console.error('Error deleting file:', err);
-                        return res.status(500).send('Internal Server Error');
+                    if (result != "d8d3404fc80f99d5f4bf943d054dd772") {
+                        const imgPath = path.join(__dirname, "..", "AllPictures", result);
+                        try {
+                            fs.unlink(imgPath);
+                            return res.status(200).send('File deleted successfully');
+                        } catch (err) {
+                            console.error('Error deleting file:', err);
+                            return res.status(500).send('Internal Server Error');
+                        }
                     }
                 }
             }
