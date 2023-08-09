@@ -34,7 +34,8 @@ function Profile() {
             } else {
                 if (result.status === 200) {
                     result.json().then(json => {
-                        setArticles(articles);
+                        setArticles(json);
+                        console.log(articles);
                     });
                 } else {
                     navigate("/E404");
