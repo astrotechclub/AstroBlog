@@ -22,8 +22,7 @@ router.route("/")
         await setRefreshToken(userId, refreshToken);
         res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: parseInt(process.env.REFRESH_TOKEN_EXPIRE_TIME_IN_MS) });
         res.cookie('token', accessToken, { httpOnly: true, maxAge: parseInt(process.env.ACCESS_TOKEN_EXPIRE_TIME_IN_MS) });
-        res.status(200).send({ userId: userId });
-        next();
+        return res.status(200).send({ userId: userId });
     });
 
 

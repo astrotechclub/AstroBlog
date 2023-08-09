@@ -8,8 +8,7 @@ const router = express.Router();
 router.route("/")
     .get(async (req, res, next) => {
         const comments = await getAllCommunities();
-        res.send(comments);
-        next();
+        return res.send(comments);
     });
 
 router.route("/unfollow")
@@ -20,16 +19,15 @@ router.route("/unfollow")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const user = decoded.userId;
                     const community = req.body.community;
                     const result = await unfollowCommunity(community, user);
                     if (result.affectedRows > 0) {
-                        res.status(200);
-                        next();
+                        return res.status(200);
                     } else {
-                        res.sendStatus(400);
+                        return res.sendStatus(400);
                     }
                 }
             }
@@ -45,16 +43,15 @@ router.route("/follow")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const user = decoded.userId;
                     const community = req.body.community;
                     const result = await followCommunity(community, user);
                     if (result.affectedRows > 0) {
-                        res.status(200);
-                        next();
+                        return res.status(200);
                     } else {
-                        res.sendStatus(400);
+                        return res.sendStatus(400);
                     }
                 }
             }
@@ -62,27 +59,46 @@ router.route("/follow")
 
     });
 
-router.route("/user/:id")
+router.route("/following/mine")
     .get(async (req, res, next) => {
-        const id = req.params.id;
-        const result = await getUserCommunities(id);
-        res.send(result);
-        next();
+        const token = req.cookies.token;
+        jwt.verify(
+            token,
+            process.env.ACCESS_TOKEN_SECRET,
+            async (err, decoded) => {
+                if (err) {
+                    return res.sendStatus(403);
+                } else {
+                    const user = decoded.userId;
+                    const result = await getUserCommunities(user);
+                    return res.send(result);
+                }
+            }
+        );
     });
 
-router.route("/suggestions/:id")
+router.route("/suggestions/mine")
     .get(async (req, res, next) => {
-        const id = req.params.id;
-        const result = await getUserSuggestions(id);
-        res.send(result);
-        next();
+        const token = req.cookies.token;
+        jwt.verify(
+            token,
+            process.env.ACCESS_TOKEN_SECRET,
+            async (err, decoded) => {
+                if (err) {
+                    return res.sendStatus(403);
+                } else {
+                    const user = decoded.userId;
+                    const result = await getUserSuggestions(user);
+                    return res.send(result);
+                }
+            }
+        );
     })
 router.route("/users/:id")
     .get(async (req, res, next) => {
         const id = req.params.id;
         const result = await getUsers(id);
-        res.send(result);
-        next();
+        return res.send(result);
     })
 
 router.route("/:id")
@@ -93,13 +109,12 @@ router.route("/:id")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const user = decoded.userId;
                     const id = req.params.id;
                     const results = await getCommunity(id, user);
-                    res.send(results[0]);
-                    next();
+                    return res.send(results[0]);
                 }
             }
         );

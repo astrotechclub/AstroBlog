@@ -9,7 +9,7 @@ function SettingsContent({ profile, handleEditProfile, setInputs, inputs, errors
                 <SecuritySettings setInputs={setInputs} inputs={inputs} errors={errors} />
                 <div className="flex flex-row mt-16 justify-end gap-4">
                     <input type="reset" value="clear" className='w-1/4 text-white rounded-md outline-none border bg-transparent h-[40px] font-medium text-sm border-boder-grey' />
-                    <input type="submit" value="Save changes" className='w-1/4 text-white rounded-md outline-none border-none bg-gradient-to-r from-light-pink to-dark-pink h-[40px] font-medium text-sm' />
+                    <input type="submit" value="Save changes" className='w-1/4 text-white rounded-md outline-none border-none bg-gradient-to-r from-light-pink to-dark-pink h-[40px] font-medium text-sm cursor-pointer' />
                 </div>
             </form>
         </div>

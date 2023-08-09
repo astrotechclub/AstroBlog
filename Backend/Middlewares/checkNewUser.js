@@ -27,7 +27,7 @@ const checkNewUser = async (req, res, next) => {
         errors["password_c"] = "Password doesn't match!";
     }
     if (errors && Object.keys(errors).length > 0) {
-        res.status(422).send(errors);
+        return res.status(422).send(errors);
     }
     else {
         next();

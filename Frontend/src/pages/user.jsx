@@ -17,7 +17,6 @@ function Profile() {
     const [articles, setArticles] = useState([]);
     const [profile, setProfile] = useState();
     const [userProfile, setUserProfile] = useState();
-    const [prevProfile, setPrevProfile] = useState();
     const host = "http://localhost:5000";
     const picturesUrl = `${host}/picture/`;
     const maxArticlesPerPage = 3;
@@ -39,8 +38,7 @@ function Profile() {
             } else {
                 if (result.status === 200) {
                     result.json().then(json => {
-                        setArticles(json.articles);
-                        setProfile({ id: json.userId });
+                        setArticles(json);
                     });
                 } else {
                     navigate("/E404");
@@ -54,16 +52,15 @@ function Profile() {
 
     useEffect(() => {
         const fetchProfile = (async () => {
-            setPrevProfile(profile);
-            const result = await fetch(`${host}/user/${profile.id}`, { credentials: "include" });
+            const result = await fetch(`${host}/user/mine`, { credentials: "include" });
             if (result.status == 401 || result.status == 403) navigate("/login");
             if (result.status == 404) navigate("/E404");
             result.json().then(data => {
-                setProfile(prevalue => prevalue = { ...prevalue, ...data }); document.title = profile.fullname;
+                setProfile(data);
             });
         });
-        if (JSON.stringify(profile) != JSON.stringify(prevProfile)) fetchProfile();
-    }, [profile]);
+        fetchProfile();
+    }, []);
 
     useEffect(() => {
         const fetchProfile = (async () => {
@@ -71,7 +68,8 @@ function Profile() {
             if (result.status == 401 || result.status == 403) navigate("/login");
             if (result.status == 404) navigate("/E404");
             result.json().then(data => {
-                setUserProfile(data); document.title = userProfile.fullname;
+                setUserProfile(data);
+                document.title = userProfile?.fullname ? userProfile.fullname : "Astroblog";
             });
         });
         fetchProfile();
@@ -79,7 +77,7 @@ function Profile() {
 
     return (
         <>
-            {articles && profile?.fullname ?
+            {articles && userProfile?.fullname ?
                 <div id="feed" className="bg-gradient-to-b from-page-light-dark to-page-dark relative">
                     <AnimatedBg />
                     <div className="relative z-10 min-h-[100vh]">

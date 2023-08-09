@@ -8,15 +8,14 @@ router.route("/")
         const refreshToken = req.cookies.jwt;
         const refreshExists = await refreshTokenExists(refreshToken);
         if (!refreshExists) {
-            res.sendStatus(403);
+            return res.sendStatus(403);
         } else {
             jwt.verify(
                 refreshToken,
                 process.env.REFRESH_TOKEN_SECRET,
                 (err, decoded) => {
                     if (err) {
-                        console.log(err);
-                        res.sendStatus(401);
+                        return res.sendStatus(401);
                     } else {
                         req.userId = decoded.userId;
                         const accessToken = jwt.sign(
@@ -25,8 +24,7 @@ router.route("/")
                             { expiresIn: process.env.ACCESS_TOKEN_EXPIRE_TIME }
                         );
                         res.cookie('token', accessToken, { httpOnly: true, maxAge: parseInt(process.env.ACCESS_TOKEN_EXPIRE_TIME_IN_MS) });
-                        res.status(200);
-                        next();
+                        return res.status(200);
                     }
                 }
             );

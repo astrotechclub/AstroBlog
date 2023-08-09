@@ -79,7 +79,8 @@ function Settings() {
                 <div className="relative z-10 min-h-[100vh]">
                     <NavBar profile={profile} picturesUrl={picturesUrl} />
                     <div className="grid grid-cols-4 grid-rows-1 gap-16 mb-16 px-20">
-                        <SideBar />
+                        {/* <SideBar /> */}
+                        <div></div>
                         <SettingsContent profile={profile} handleEditProfile={handleEditProfile} setInputs={setInputs} inputs={inputs} errors={errors} setPicture={setPicture} picturesUrl={picturesUrl} />
                         <div className="w-full h-full"></div>
                     </div>

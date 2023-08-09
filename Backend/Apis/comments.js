@@ -8,8 +8,7 @@ const router = express.Router();
 router.route("/")
     .get(async (req, res, next) => {
         const comments = await getAllComments();
-        res.send(comments);
-        next();
+        return res.send(comments);
     });
 
 router.route("/:id-:max")
@@ -17,16 +16,14 @@ router.route("/:id-:max")
         const max = parseInt(req.params.max);
         const id = req.params.id;
         const result = await getMaxComments(id, max);
-        res.send(result);
-        next();
+        return res.send(result);
     });
 
 router.route("/:id")
     .get(checkArticleExistance, async (req, res, next) => {
         const id = req.params.id;
         const comments = await getArticleComments(id);
-        res.send(comments);
-        next();
+        return res.send(comments);
     })
     .post(async (req, res, next) => {
         const id = req.params.id;
@@ -36,15 +33,14 @@ router.route("/:id")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const user = decoded.userId;
                     const result = await AddComment(user, req.body, id);
                     if (result.affectedRows > 0) {
-                        res.status(200);
-                        next();
+                        return res.status(200);
                     } else {
-                        res.sendStatus(401);
+                        return res.sendStatus(401);
                     }
                 }
             }

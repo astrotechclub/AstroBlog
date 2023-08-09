@@ -7,8 +7,7 @@ const router = express.Router();
 router.route("/")
     .get(async (req, res, next) => {
         const articles = await getAllArticles();
-        res.send({ articles: articles, userId: req.userId });
-        next();
+        return res.send({ articles: articles, userId: req.userId });
     })
     .post(async (req, res, next) => {
         const token = req.cookies.token;
@@ -17,15 +16,14 @@ router.route("/")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const user = decoded.userId;
                     const result = await createArticle(req.body, user);
                     if (result.affectedRows > 0) {
-                        res.status(201);
-                        next();
+                        return res.status(201);
                     } else {
-                        res.sendStatus(400);
+                        return res.sendStatus(400);
                     }
                 }
             }
@@ -42,15 +40,14 @@ router.route("/update_likes/:id")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const user = decoded.userId;
                     const result = await updateLikes(id, user, params);
                     if (result.affectedRows > 0) {
-                        res.status(200);
-                        next();
+                        return res.status(200);
                     } else {
-                        res.sendStatus(400);
+                        return res.sendStatus(400);
                     }
                 }
             }
@@ -67,15 +64,14 @@ router.route("/update_dislikes/:id")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const user = decoded.userId;
                     const result = await updateDislikes(id, user, params);
                     if (result.affectedRows > 0) {
-                        res.status(200);
-                        next();
+                        return res.status(200);
                     } else {
-                        res.sendStatus(400);
+                        return res.sendStatus(400);
                     }
                 }
             }
@@ -91,15 +87,14 @@ router.route("/likes/:id")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const user = decoded.userId;
                     const result = await getIfLikeArticle(id, user);
                     if (result == true || result == false) {
-                        res.status(200).send({ isLiked: result });
-                        next();
+                        return res.status(200).send({ isLiked: result });
                     } else {
-                        res.sendStatus(400);
+                        return res.sendStatus(400);
                     }
                 }
             }
@@ -115,15 +110,14 @@ router.route("/dislikes/:id")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const user = decoded.userId;
                     const result = await getIfDislikeArticle(id, user);
                     if (result == true || result == false) {
-                        res.status(200).send({ isDisliked: result });
-                        next();
+                        return res.status(200).send({ isDisliked: result });
                     } else {
-                        res.sendStatus(400);
+                        return res.sendStatus(400);
                     }
                 }
             }
@@ -133,8 +127,7 @@ router.route("/dislikes/:id")
 router.route("/top")
     .get(async (req, res, next) => {
         const result = await getTopArticles();
-        res.send(result);
-        next();
+        return res.send(result);
     });
 
 router.route("/-:max")
@@ -145,13 +138,12 @@ router.route("/-:max")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const user = decoded.userId;
                     const max = parseInt(req.params.max);
                     const result = await getUserArticles(user, max);
-                    res.send({ articles: result, userId: req.userId });
-                    next();
+                    return res.send(result);
                 }
             }
         );
@@ -165,13 +157,12 @@ router.route("/mine/-:max")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const max = parseInt(req.params.max);
                     const user = decoded.userId;
                     const result = await getMyArticles(user, max);
-                    res.send({ articles: result, userId: req.userId });
-                    next();
+                    return res.send(result);
                 }
             }
         );
@@ -182,8 +173,7 @@ router.route("/:user/-:max")
         const max = parseInt(req.params.max);
         const user = parseInt(req.params.user);
         const result = await getMyArticles(user, max);
-        res.send({ articles: result, userId: req.userId });
-        next();
+        return res.send(result);
     });
 
 router.route("/community/:id/-:max")
@@ -191,16 +181,14 @@ router.route("/community/:id/-:max")
         const max = parseInt(req.params.max);
         const id = parseInt(req.params.id);
         const result = await getCommunityArticles(id, max);
-        res.send({ articles: result, userId: req.userId });
-        next();
+        return res.send({ articles: result, userId: req.userId });
     });
 
 router.route("/:id")
     .get(checkArticleExistance, async (req, res, next) => {
         const id = req.params.id;
         const article = await getArticleWithContent(id);
-        res.send(article);
-        next();
+        return res.send(article);
     });
 
 module.exports = router;

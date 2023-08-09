@@ -12,12 +12,11 @@ router.route("/mine")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const id = decoded.userId;
                     const result = await getNotifications(id);
-                    res.send(result);
-                    next();
+                    return res.send(result);
                 }
             }
         );
@@ -32,12 +31,11 @@ router.route("/see")
             process.env.ACCESS_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err) {
-                    res.sendStatus(403);
+                    return res.sendStatus(403);
                 } else {
                     const id = decoded.userId;
                     const result = await seeNotification(id, notif);
-                    res.send(200);
-                    next();
+                    return res.send(200);
                 }
             }
         );

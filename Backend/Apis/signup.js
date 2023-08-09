@@ -26,17 +26,15 @@ router.route("/")
             await setRefreshToken(userId, refreshToken);
             res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: parseInt(process.env.REFRESH_TOKEN_EXPIRE_TIME_IN_MS) });
             res.cookie('token', accessToken, { httpOnly: true, maxAge: parseInt(process.env.ACCESS_TOKEN_EXPIRE_TIME_IN_MS) });
-            res.status(200).send({ userId: userId });
-            next();
+            return res.status(200).send({ userId: userId });
         } else {
             // add entry in errors log file
-            res.sendStatus(401);
+            return res.sendStatus(401);
         }
     });
 
 router.route("/validate")
     .post(checkNewUser, (req, res, next) => {
-        res.status(200).send({ ok: true });
-        next();
+        return res.status(200).send({ ok: true });
     })
 module.exports = router;

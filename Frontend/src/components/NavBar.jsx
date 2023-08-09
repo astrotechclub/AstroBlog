@@ -31,6 +31,9 @@ function NavBar({ profile, picturesUrl, host }) {
 
     const handleLogout = async () => {
         const res = await fetch(`${host}/logout`, { credentials: "include" });
+        console.log(res);
+        if (res.status == 401 || res.status == 403) navigate("/login");
+        if (res.status == 404) navigate("/E404");
         if (res.status === 200) {
             navigate("/login");
         }
@@ -67,7 +70,7 @@ function NavBar({ profile, picturesUrl, host }) {
                     {showNotification && <Notifications notifications={notifications} host={host} />}
                 </div>
                 <div onClick={() => { setShowDropDownMenu(p => !p); setShowNotification(false); }} className="min-w-[80px] relative">
-                    <img src={picturesUrl + profile.img} alt="profile" className="cursor-pointer rounded-full h-[60px] w-[60px] object-cover" />
+                    <img src={profile?.img ? picturesUrl + profile.img : ""} alt="profile" className="cursor-pointer rounded-full h-[60px] w-[60px] object-cover" />
                     {
                         showDropDownMenu && <div className="absolute top-[70px] right-[20px] bg-white rounded-md px-4 py-4 z-20 w-[200px]">
                             <div onClick={() => navigate("/profile")} className="cursor-pointer p-2 flex flex-row items-center justify-between gap-4 w-full hover:bg-input-light-grey rounded-md border-b border-border-grey">

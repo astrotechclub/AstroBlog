@@ -19,7 +19,6 @@ function Community() {
     const [articles, setArticles] = useState([]);
     const [profile, setProfile] = useState();
     const [community, setCommunity] = useState();
-    const [prevProfile, setPrevProfile] = useState();
     const host = "http://localhost:5000";
     const picturesUrl = `${host}/picture/`;
     const maxArticlesPerPage = 3;
@@ -55,16 +54,15 @@ function Community() {
 
     useEffect(() => {
         const fetchProfile = (async () => {
-            setPrevProfile(profile);
-            const result = await fetch(`${host}/user/${profile.id}`, { credentials: "include" });
+            const result = await fetch(`${host}/user/mine`, { credentials: "include" });
             if (result.status == 401 || result.status == 403) navigate("/login");
             if (result.status == 404) navigate("/E404");
             result.json().then(data => {
-                setProfile(prevalue => prevalue = { ...prevalue, ...data });
+                setProfile(data);
             });
         });
-        if (JSON.stringify(profile) != JSON.stringify(prevProfile)) fetchProfile();
-    }, [profile]);
+        fetchProfile();
+    }, []);
 
     useEffect(() => {
         const fetchProfile = (async () => {
@@ -73,7 +71,7 @@ function Community() {
             if (result.status == 404) navigate("/E404");
             result.json().then(data => {
                 setCommunity(data);
-                document.title = community.community_name;
+                document.title = community?.community_name ? community.community_name : "Astroblog";
             });
         });
         fetchProfile();
@@ -115,7 +113,7 @@ function Community() {
 
     return (
         <>
-            {articles && profile?.fullname ?
+            {articles && community ?
                 <div id="feed" className="bg-gradient-to-b from-page-light-dark to-page-dark relative">
                     <AnimatedBg />
                     <div className="relative z-10 min-h-[100vh]">
