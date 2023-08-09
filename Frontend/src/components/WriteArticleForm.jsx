@@ -78,7 +78,7 @@ function WriteArticleForm({ host, community }) {
 
             </div>
             <div className="w-full flex flex-row justify-end items-center mt-12">
-                <input type="submit" className="w-[200px] py-4 rounded-md bg-dark-pink font-medium text-sm text-white" value="publish" />
+                <input type="submit" className="w-[200px] py-4 rounded-md bg-dark-pink font-medium text-sm text-white cursor-pointer" value="publish" />
             </div>
         </form>
     );

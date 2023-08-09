@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS USER(
     nb_publications int not null default 0,
     nb_likes int not null default 0,
     is_admin bool not null,
-    profile_pic varchar(40) not null default "1deb11455a576ce8458fc595e1ece643",
+    profile_pic varchar(40) not null default "d8d3404fc80f99d5f4bf943d054dd772",
     category varchar(15) not null,
     details varchar(100),
     user_password varchar(100) not null,
