@@ -16,7 +16,6 @@ function Home() {
     document.title = "Astroblog | Feed 🚀";
     const [articles, setArticles] = useState([]);
     const [profile, setProfile] = useState();
-    const [prevProfile, setPrevProfile] = useState();
     const host = "http://localhost:5000";
     const picturesUrl = `${host}/picture/`;
     const navigate = useNavigate();
@@ -34,8 +33,7 @@ function Home() {
             } else {
                 if (result.status === 200) {
                     result.json().then(json => {
-                        setArticles(json.articles);
-                        setProfile({ id: json.userId });
+                        setArticles(json);
                     });
                 } else {
                     navigate("/E404");
@@ -49,14 +47,13 @@ function Home() {
 
     useEffect(() => {
         const fetchProfile = (async () => {
-            setPrevProfile(profile);
-            const result = await fetch(`${host}/user/${profile.id}`, { credentials: "include" });
+            const result = await fetch(`${host}/user/mine`, { credentials: "include" });
             if (result.status == 401 || result.status == 403) navigate("/login");
             if (result.status == 404) navigate("/E404");
-            result.json().then(data => setProfile({ ...profile, ...data }));
+            result.json().then(data => setProfile(data));
         });
-        if (JSON.stringify(profile) != JSON.stringify(prevProfile)) fetchProfile();
-    }, [profile]);
+        fetchProfile();
+    }, []);
 
     return (
         <>
@@ -72,7 +69,7 @@ function Home() {
                             <div></div>
                             <Feed articles={articles} maxArticlesPerPage={maxArticlesPerPage} setArticles={setArticles} isProfile={false} picturesUrl={picturesUrl} host={host} />
                             <div className=" col-span-2 h-full w-full relative">
-                                <Contacts userId={profile.id} picturesUrl={picturesUrl} host={host} />
+                                <Contacts picturesUrl={picturesUrl} host={host} />
                             </div>
                         </div>
                         <Footer profile={profile} />

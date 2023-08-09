@@ -45,7 +45,7 @@ const validateInputs = async (req, res, next) => {
         );
     }
     if (errors) {
-        res.status(422).send(errors);
+        return res.status(422).send(errors);
     }
     else {
         next();

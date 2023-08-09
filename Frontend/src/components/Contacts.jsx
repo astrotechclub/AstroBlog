@@ -4,14 +4,14 @@ import communitiesIcon from "../assets/icons/group.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function Contacts({ userId, picturesUrl, host }) {
+function Contacts({ picturesUrl, host }) {
     const [suggestions, setSuggestions] = useState([]);
     const [my_communities, setMyCommunities] = useState([]);
     const navigate = new useNavigate();
 
     useEffect(() => {
         const fetchMyCommunites = async () => {
-            const url = `${host}/communities/user/${userId}`;
+            const url = `${host}/communities/following/mine`;
             const result = await fetch(url, { credentials: "include" });
             if (result.status == 200) {
                 result.json().then(json => setMyCommunities(json));
@@ -25,7 +25,7 @@ function Contacts({ userId, picturesUrl, host }) {
 
     useEffect(() => {
         const fetchMyCommunites = async () => {
-            const url = `${host}/communities/suggestions/${userId}`;
+            const url = `${host}/communities/suggestions/mine`;
             const result = await fetch(url, { credentials: "include" });
             if (result.status == 200) {
                 result.json().then(json => setSuggestions(json));
