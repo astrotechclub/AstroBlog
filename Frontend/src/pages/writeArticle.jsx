@@ -35,7 +35,7 @@ function WriteArticle() {
                 <div className="relative z-10 min-h-[100vh]">
                     <NavBar profile={profile} picturesUrl={picturesUrl} host={host} />
                     <SmoothScroll />
-                    <div className="px-20 py-8">
+                    <div className="px-8 md:px-14 lg:px-20 py-8">
                         <div className="pb-8 flex flex-row justify-start items-center gap-4">
                             <img src={feather} alt="top articles" className="h-5 w-5" />
                             <h2 className="font-semibold text-big-title text-white">New Article</h2>

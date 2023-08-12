@@ -27,14 +27,14 @@ function LoginForm({ host }) {
         }).catch(err => { setErrors(err.response.data); });
     }
     return (
-        <div className="px-20 py-5 flex flex-col items-start justify-between">
-            <div className='flex flex-row justify-start items-center gap-2 mb-10'>
+        <div className="md:px-20 py-10 lg:px-0 xl:px-20 flex flex-col items-start justify-between">
+            <div className='px-12 md:px-20 flex flex-row justify-start items-center gap-2 mb-10'>
                 <img src={logo} alt="logo" className='h-8 w-8 invert -rotate-logo' />
-                <span className='font text-lg font-medium text-text font-semibold logo'>Astrotech</span>
+                <span className='font text-lg  text-text font-semibold logo'>Astrotech</span>
             </div>
             <div className='flex flex-col justify-center items-start w-full my-5'>
-                <h1 className='block text-2xl text-black font-bold'>Explore the world through our words</h1>
-                <span className='block font-semibold text-grey mt-4'>Login to your account</span>
+                <h1 className='px-12 md:px-20 block text-lg md:text-2xl text-black font-bold'>Explore the world through our words</h1>
+                <span className='px-12 md:px-20 block font-semibold text-grey mt-4'>Login to your account</span>
                 <form action="" onSubmit={handleSubmit} className='my-8 flex flex-col justify-center items-center w-full'>
                     <div className='p-4 border border-boder-grey rounded-md bg-input-light-grey w-3/4 flex flex-row items-center justify-between mb-4'>
                         <input type="text" name="email" placeholder='email' onChange={(e) => { setInputs({ ...inputs, email: e.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />

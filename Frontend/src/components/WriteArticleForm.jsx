@@ -70,15 +70,15 @@ function WriteArticleForm({ host, community }) {
                 </div>
             </div>
             <label className="text-md text-white font-medium mb-2 block">Content*</label>
-            <div className="flex flex-row items-start justify-center gap-8">
-                <textarea name="content" required className="w-1/2 h-[500px] p-4 rounded-md text-white bg-transparent outline-none border border-border-grey resize-none" placeholder="Write something.." onChange={e => { setContent(e.target.value); setInputs({ ...inputs, "content": e.target.value }) }} />
-                <div className="markdown w-1/2 h-[500px] p-4 text-black bg-white rounded-md overflow-y-auto">
+            <div className="flex flex-col lg:flex-row items-start justify-center gap-8">
+                <textarea name="content" required className="w-full lg:w-1/2  h-[300px] lg:h-[500px] p-4 rounded-md text-white bg-transparent outline-none border border-border-grey resize-none" placeholder="Write something.." onChange={e => { setContent(e.target.value); setInputs({ ...inputs, "content": e.target.value }) }} />
+                <div className="markdown w-full lg:w-1/2 h-[300px] lg:h-[500px] p-4 text-black bg-white rounded-md overflow-y-auto">
                     <ReactMarkdown>{content}</ReactMarkdown>
                 </div>
 
             </div>
-            <div className="w-full flex flex-row justify-end items-center mt-12">
-                <input type="submit" className="w-[200px] py-4 rounded-md bg-dark-pink font-medium text-sm text-white cursor-pointer" value="publish" />
+            <div className="w-full flex flex-row justify-center lg:justify-end items-center mt-12">
+                <input type="submit" className="w-full lg::w-[200px] py-4 rounded-md bg-dark-pink font-medium text-sm text-white cursor-pointer" value="publish" />
             </div>
         </form>
     );

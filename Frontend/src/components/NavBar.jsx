@@ -58,7 +58,7 @@ function NavBar({ profile, picturesUrl, host }) {
     }
 
     return (
-        <div className="flex flex-row items-center justify-between gap-4 py-10 px-20" >
+        <div className="flex flex-row items-center justify-between gap-4 py-10 px-5 lg:px-20" >
             <div className="flex flex-col items-center justify-center cursor-pointer" onClick={() => { navigate("/home") }}>
                 <img src={logo} alt="logo" className="h-12 w-12 -rotate-logo" />
                 <span className="logo font-semibold text-sm text-white">Astrotech</span>
