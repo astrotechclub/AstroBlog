@@ -13,6 +13,18 @@ function FeedNavBar({ profile, picturesUrl, host }) {
     const [notifications, setNotifications] = useState([]);
     const [showNotification, setShowNotification] = useState(false);
     const [showDropDownMenu, setShowDropDownMenu] = useState(false);
+    const [screenSize, setScreenSize] = useState('');
+
+    const handleResize = () => {
+        const width = window.innerWidth;
+        if (width >= 1024) {
+            setScreenSize('large');
+        } else if (width >= 768) {
+            setScreenSize('medium');
+        } else {
+            setScreenSize('small');
+        }
+    };
 
     const handleBellClick = () => {
         if (notifications.length > 0) {
@@ -39,6 +51,8 @@ function FeedNavBar({ profile, picturesUrl, host }) {
     }
 
     useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
         const fetchNotifications = (async () => {
             const result = await fetch(`${host}/notification/mine`, { credentials: "include" });
             result.json().then(data => {
@@ -46,6 +60,9 @@ function FeedNavBar({ profile, picturesUrl, host }) {
             });
         });
         fetchNotifications();
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, []);
 
 
@@ -58,39 +75,80 @@ function FeedNavBar({ profile, picturesUrl, host }) {
     }
 
     return (
-        <div className="px-20 flex flex-row items-center justify-between gap-4 py-10">
-            <div className="flex flex-col items-center justify-center cursor-pointer" onClick={() => {
+        <div>{ screenSize === 'large' && <div className=" px-5 lg:px-20 flex flex-row items-center justify-between gap-4 py-10">
+            <div className="flex flex-col items-center justify-center cursor-pointer" onClick={ () => {
                 window.location.reload();
-            }}>
-                <img src={logo} alt="logo" className="h-10 -rotate-logo" />
+            } }>
+                <img src={ logo } alt="logo" className="h-10 -rotate-logo" />
                 <span className="logo font-semibold text-sm text-white">Astrotech</span>
             </div>
-            <SearchBar setShowNotification={setShowNotification} />
+            <SearchBar setShowNotification={ setShowNotification } />
             <div className="relative cursor-pointer min-w-[25px]">
-                <img src={bellIcon} alt="bell" className="h-6 w-6" onClick={handleBellClick} />
-                {notify()}
-                {showNotification && <Notifications notifications={notifications} host={host} />}
+                <img src={ bellIcon } alt="bell" className="h-6 w-6" onClick={ handleBellClick } />
+                { notify() }
+                { showNotification && <Notifications notifications={ notifications } host={ host } /> }
             </div>
-            <div onClick={() => { setShowDropDownMenu(p => !p); setShowNotification(false); }} className="min-w-[80px] relative">
-                <img src={picturesUrl + profile.img} alt="profile" className="cursor-pointer rounded-full h-[60px] w-[60px] object-cover" />
+            <div onClick={ () => { setShowDropDownMenu(p => !p); setShowNotification(false); } } className="min-w-[80px] relative">
+                <img src={ picturesUrl + profile.img } alt="profile" className="cursor-pointer rounded-full h-[60px] w-[60px] object-cover" />
                 {
                     showDropDownMenu && <div className="absolute top-[70px] right-[20px] bg-white rounded-md px-4 py-4 z-20 w-[200px]">
-                        <div onClick={() => navigate("/profile")} className="cursor-pointer p-2 flex flex-row items-center justify-between gap-4 w-full hover:bg-input-light-grey rounded-md border-b border-border-grey">
+                        <div onClick={ () => navigate("/profile") } className="cursor-pointer p-2 flex flex-row items-center justify-between gap-4 w-full hover:bg-input-light-grey rounded-md border-b border-border-grey">
                             <span className="font-semibold text-small-subtitle">My profile  </span>
-                            <img src={userIcon} alt="user icon" className="h-5 w-5" />
+                            <img src={ userIcon } alt="user icon" className="h-5 w-5" />
                         </div>
-                        <div onClick={() => navigate("/settings")} className="cursor-pointer p-2 flex flex-row items-center justify-between gap-4 w-full hover:bg-input-light-grey rounded-md border-b border-border-grey">
+                        <div onClick={ () => navigate("/settings") } className="cursor-pointer p-2 flex flex-row items-center justify-between gap-4 w-full hover:bg-input-light-grey rounded-md border-b border-border-grey">
                             <span className="font-semibold text-small-subtitle">Settings</span>
-                            <img src={settingsIcon} alt="settings icon" className="h-5 w-5" />
+                            <img src={ settingsIcon } alt="settings icon" className="h-5 w-5" />
                         </div>
-                        <div onClick={handleLogout} className="cursor-pointer p-2 flex flex-row items-center justify-between gap-4 w-full  hover:bg-input-light-grey rounded-md border-b border-border-grey">
+                        <div onClick={ handleLogout } className="cursor-pointer p-2 flex flex-row items-center justify-between gap-4 w-full  hover:bg-input-light-grey rounded-md border-b border-border-grey">
                             <span className="font-semibold text-small-subtitle">Disconnect</span>
-                            <img src={disconnectIcon} alt="disconnect icon" className="h-5 w-5" />
+                            <img src={ disconnectIcon } alt="disconnect icon" className="h-5 w-5" />
                         </div>
                     </div>
                 }
             </div>
+        </div> }
+            { screenSize === 'small' &&
+                <div className="px-5 lg:px-20 flex flex-col gap-8 mb-8">
+                    <div className=" flex flex-row items-center justify-between gap-4 py-10">
+                        <div className="flex flex-col items-center justify-center cursor-pointer" onClick={ () => {
+                            window.location.reload();
+                        } }>
+                            <img src={ logo } alt="logo" className="h-10 -rotate-logo" />
+                            <span className="logo font-semibold text-sm text-white">Astrotech</span>
+                        </div>
+                        <div className="flex flex-row gap-8 justify-between items-center">
+                            <div className="relative cursor-pointer min-w-[25px]">
+                                <img src={ bellIcon } alt="bell" className="h-6 w-6" onClick={ handleBellClick } />
+                                { notify() }
+                                { showNotification && <Notifications notifications={ notifications } host={ host } /> }
+                            </div>
+                            <div onClick={ () => { setShowDropDownMenu(p => !p); setShowNotification(false); } } className="min-w-[80px] relative">
+                                <img src={ picturesUrl + profile.img } alt="profile" className="cursor-pointer rounded-full h-[60px] w-[60px] object-cover" />
+                                {
+                                    showDropDownMenu && <div className="absolute top-[70px] right-[20px] bg-white rounded-md px-4 py-4 z-20 w-[200px]">
+                                        <div onClick={ () => navigate("/profile") } className="cursor-pointer p-2 flex flex-row items-center justify-between gap-4 w-full hover:bg-input-light-grey rounded-md border-b border-border-grey">
+                                            <span className="font-semibold text-small-subtitle">My profile  </span>
+                                            <img src={ userIcon } alt="user icon" className="h-5 w-5" />
+                                        </div>
+                                        <div onClick={ () => navigate("/settings") } className="cursor-pointer p-2 flex flex-row items-center justify-between gap-4 w-full hover:bg-input-light-grey rounded-md border-b border-border-grey">
+                                            <span className="font-semibold text-small-subtitle">Settings</span>
+                                            <img src={ settingsIcon } alt="settings icon" className="h-5 w-5" />
+                                        </div>
+                                        <div onClick={ handleLogout } className="cursor-pointer p-2 flex flex-row items-center justify-between gap-4 w-full  hover:bg-input-light-grey rounded-md border-b border-border-grey">
+                                            <span className="font-semibold text-small-subtitle">Disconnect</span>
+                                            <img src={ disconnectIcon } alt="disconnect icon" className="h-5 w-5" />
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <SearchBar setShowNotification={ setShowNotification } />
+                </div>
+            }
         </div>
+
     );
 
 }

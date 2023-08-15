@@ -47,7 +47,7 @@ function Feed({ articles, maxArticlesPerPage, setArticles, isProfile, picturesUr
 
 
     return (
-        <div className="col-span-5" >
+        <div className="col-span-6 lg:col-span-5" >
             <div className="pb-4 border-b-2 border-feed-border flex flex-row justify-between items-center">
                 <div className="flex flex-row items-center justify-start gap-4">
                     <img src={article} alt="articles" className="h-5 w-5" />

@@ -67,11 +67,11 @@ function Home() {
                         <FeedNavBar profile={profile} picturesUrl={picturesUrl} host={host} />
                         <SmoothScroll />
                         <TopArticles host={host} />
-                        <div className="px-20 grid grid-cols-8 grid-rows-1 gap-8 mt-4 mb-16">
+                        <div className=" px-8 md:px-20 flex flex-col lg:grid lg:grid-cols-8 lg:grid-rows-1 gap-8 mt-4 mb-16">
                             {/* <Banners /> */}
-                            <div></div>
+                            <div className="hidden lg:block"></div>
                             <Feed articles={articles} maxArticlesPerPage={maxArticlesPerPage} setArticles={setArticles} isProfile={false} picturesUrl={picturesUrl} host={host} />
-                            <div className=" col-span-2 h-full w-full relative">
+                            <div className=" lg:col-span-2 h-full w-full relative">
                                 <Contacts picturesUrl={picturesUrl} host={host} />
                             </div>
                         </div>

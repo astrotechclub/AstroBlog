@@ -10,7 +10,7 @@ function ProfileSettings({ profile, setInputs, inputs, errors, setPicture, pictu
                 <img src={settingsIcon} alt="Settings" className="h-6 w-6" />
                 <h2 className="font-semibold text-card-title text-white">Profile Settings</h2>
             </div >
-            <div className="flex flex-row mt-4 justify-between items-center gap-8">
+            <div className="flex flex-col-reverse md:flex-row mt-4 justify-between items-center gap-8">
                 <div className="w-full">
                     <div>
                         <label className="text-white text-small-subtitle pb-1 pl-1 block">Fullname</label>

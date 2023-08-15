@@ -78,7 +78,7 @@ function Settings() {
                 <AnimatedBg />
                 <div className="relative z-10 min-h-[100vh]">
                     <NavBar profile={profile} picturesUrl={picturesUrl} />
-                    <div className="grid grid-cols-4 grid-rows-1 gap-16 mb-16 px-20">
+                    <div className="grid grid-cols-4 grid-rows-1 gap-16 mt-5 lg:mt-0 mb-16 px-8 md:px-14 xl:px-20">
                         {/* <SideBar /> */}
                         <div></div>
                         <SettingsContent profile={profile} handleEditProfile={handleEditProfile} setInputs={setInputs} inputs={inputs} errors={errors} setPicture={setPicture} picturesUrl={picturesUrl} />

@@ -119,29 +119,29 @@ function Community() {
                     <div className="relative z-10 min-h-[100vh]">
                         <NavBar profile={profile} picturesUrl={picturesUrl} host={host} />
                         <SmoothScroll />
-                        <div className="px-40 flex flex-row items-start justify-between gap-4">
-                            <div className="flex flex-row gap-4 items-center justify-start mt-4 mb-24">
-                                <img src={picturesUrl + community.profile_img} alt="profile" className="rounded-full h-[150px] w-[150px] object-cover p-0 m-0" />
+                        <div className="px-8 md:px-14 lg:px-40 flex  flex-row items-start justify-between gap-4">
+                            <div className="flex flex-row gap-4 items-center justify-center lg:justify-start mt-4 mb-24">
+                                <img src={picturesUrl + community.profile_img} alt="profile" className="rounded-full h-[120px] w-[120px] md:h-[150px] md:w-[150px] object-cover p-0 m-0" />
                                 <div className="flex flex-col items-start justify-end">
-                                    <span className="text-big-title text-white font-bold">{community.community_name}</span>
-                                    <span className="text-subtitle text-sm font-semibold mt-2">description</span>
+                                    <span className="text-xl lg:text-big-title text-white font-bold">{community.community_name}</span>
+                                    <span className=" text-subtitle lg:text-sm font-semibold mt-2">description</span>
                                     <span className="text-white text-sm w-full mb-2 max-w-[300px]">{community.community_description}</span>
                                     <span className="text-small-subtitle text-description font-semibold text-center w-full">{community.nb_likes} likes, {community.nb_followers} followers</span>
                                 </div>
                             </div>
                             {community.id != 1 && <button className="block border-2 rounded-md border-feed-border text-description text-md font-medium px-4 py-2" onClick={handleClick}>{community.isFollower ? "unfollow" : "follow"}</button>}
                         </div>
-                        <div className="px-20 grid grid-cols-8 grid-rows-1 gap-8 mt-4 mb-8">
+                        <div className="px-8 md:px-16 lg:px-20 grid grid-cols-8 grid-rows-1 gap-8 mt-4 mb-8">
                             <div></div>
-                            <div className="col-span-5">
+                            <div className="col-span-8 md:col-span-5">
                                 <SearchBar />
                             </div>
-                            <div className="col-span-2"></div>
+                            <div className="md:col-span-2"></div>
                         </div>
-                        <div className="px-20 grid grid-cols-8 grid-rows-1 gap-8 mt-4 mb-16">
-                            <div></div>
+                        <div className="px-8 md:px-20 flex flex-col lg:grid lg:grid-cols-8 lg:grid-rows-1 gap-8 mt-4 mb-16">
+                            <div className="hidden lg:block"></div>
                             <Feed articles={articles} maxArticlesPerPage={maxArticlesPerPage} setArticles={setArticles} isProfile={false} picturesUrl={picturesUrl} host={host} isFollower={community.isFollower} community={community_id} />
-                            <div className="col-span-2">
+                            <div className=" lg:col-span-2 h-full w-full relative">
                                 <Followers community={community_id} host={host} picturesUrl={picturesUrl} />
                             </div>
                         </div>
