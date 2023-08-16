@@ -4,10 +4,13 @@
 
 #spans {
     span {
+        display: block;
+        font-size: 200px;
+        font-weight: bolder;
         font-family: $font-illustation-family;
         color: transparent;
-        line-height: 7rem;
-        -webkit-text-stroke: 1px;
+        line-height: 10rem;
+        -webkit-text-stroke: 2px;
         -webkit-text-stroke-color: rgba(255, 255, 255, 0.6);
     }
 }

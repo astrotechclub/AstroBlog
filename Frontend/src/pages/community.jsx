@@ -25,6 +25,23 @@ function Community() {
     const navigate = useNavigate();
     const community_id = useParams().id;
     if (isNaN(community_id)) navigate("/E404");
+    const [screenSize, setScreenSize] = useState('');
+
+    const handleResize = () => {
+        const width = window.innerWidth;
+        if (width >= 1024) {
+            setScreenSize('large');
+        } else if (width >= 768) {
+            setScreenSize('medium');
+        } else {
+            setScreenSize('small');
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
+    }, []);
 
     useEffect(() => {
         const fetchArticles = async () => {
@@ -113,7 +130,7 @@ function Community() {
 
     return (
         <>
-            {articles && community ?
+            {articles && community && profile ?
                 <div id="feed" className="bg-gradient-to-b from-page-light-dark to-page-dark relative">
                     <AnimatedBg />
                     <div className="relative z-10 min-h-[100vh]">
@@ -131,6 +148,9 @@ function Community() {
                             </div>
                             {community.id != 1 && <button className="block border-2 rounded-md border-feed-border text-description text-md font-medium px-4 py-2" onClick={handleClick}>{community.isFollower ? "unfollow" : "follow"}</button>}
                         </div>
+                        {screenSize !== "large" && <div className="px-8 md:px-16 lg:px-20 mb-10 h-full w-full relative">
+                            <Followers community={community_id} host={host} picturesUrl={picturesUrl} />
+                        </div>}
                         <div className="px-8 md:px-16 lg:px-20 grid grid-cols-8 grid-rows-1 gap-8 mt-4 mb-8">
                             <div></div>
                             <div className="col-span-8 md:col-span-5">
@@ -141,9 +161,9 @@ function Community() {
                         <div className="px-8 md:px-20 flex flex-col lg:grid lg:grid-cols-8 lg:grid-rows-1 gap-8 mt-4 mb-16">
                             <div className="hidden lg:block"></div>
                             <Feed articles={articles} maxArticlesPerPage={maxArticlesPerPage} setArticles={setArticles} isProfile={false} picturesUrl={picturesUrl} host={host} isFollower={community.isFollower} community={community_id} />
-                            <div className=" lg:col-span-2 h-full w-full relative">
+                            {screenSize === "large" && <div className=" lg:col-span-2 h-full w-full relative">
                                 <Followers community={community_id} host={host} picturesUrl={picturesUrl} />
-                            </div>
+                            </div>}
                         </div>
                         <Footer profile={profile} />
                     </div>

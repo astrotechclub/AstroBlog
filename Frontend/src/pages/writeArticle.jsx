@@ -36,7 +36,7 @@ function WriteArticle() {
                     <NavBar profile={profile} picturesUrl={picturesUrl} host={host} />
                     <SmoothScroll />
                     <div className="px-8 md:px-14 lg:px-20 py-8">
-                        <div className="pb-8 flex flex-row justify-start items-center gap-4">
+                        <div className="mb-8 pb-4 border-b-2 border-feed-border flex flex-row justify-start items-center gap-4">
                             <img src={feather} alt="top articles" className="h-5 w-5" />
                             <h2 className="font-semibold text-big-title text-white">New Article</h2>
                         </div>

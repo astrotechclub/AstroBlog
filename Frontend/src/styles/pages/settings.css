@@ -2,7 +2,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 :root {
   --font-size: 16px;
   --image-unit-size: 10px;
@@ -24,7 +23,19 @@ html {
   height: 100vh;
   width: 100vw;
 }
-
+html ::-webkit-scrollbar {
+  width: 5px;
+}
+html ::-webkit-scrollbar-track {
+  background: rgba(61, 61, 61, 0.2431372549);
+}
+html ::-webkit-scrollbar-thumb {
+  background: var(--dark-color);
+  border-radius: 5px;
+}
+html ::-webkit-scrollbar-thumb:hover {
+  background: var(--light-color);
+}
 html body {
   min-height: 100vh;
   height: 100%;
@@ -37,17 +48,14 @@ html body {
   -moz-osx-font-smoothing: grayscale;
   /* The idea of animating inner circle is based on Polymer loading indicator by Keanu Lee https://blog.keanulee.com/2014/10/20/the-tale-of-three-spinners.html */
 }
-
 @keyframes spin {
   0% {
     transform: rotate(0);
   }
-
   100% {
     transform: rotate(360deg);
   }
 }
-
 html body .spinner {
   position: fixed;
   top: 0;
@@ -57,7 +65,6 @@ html body .spinner {
   z-index: 1003;
   overflow: hidden;
 }
-
 html body .spinner div:first-child {
   display: block;
   position: relative;
@@ -69,16 +76,14 @@ html body .spinner div:first-child {
   border-radius: 50%;
   transform: translate3d(0, 0, 0);
   animation: spin 2s linear infinite;
-  box-shadow: 0 3px 3px 0 #E21153;
+  box-shadow: 0 3px 3px 0 var(--light-color);
 }
-
 html body .spinner div:first-child:after,
 html body .spinner div:first-child:before {
   content: "";
   position: absolute;
   border-radius: 50%;
 }
-
 html body .spinner div:first-child:before {
   top: 5px;
   left: 5px;
@@ -87,27 +92,23 @@ html body .spinner div:first-child:before {
   box-shadow: 0 3px 3px 0 white;
   animation: spin 3s linear infinite;
 }
-
 html body .spinner div:first-child:after {
   top: 15px;
   left: 15px;
   right: 15px;
   bottom: 15px;
-  box-shadow: 0 3px 3px 0 #F60B38;
+  box-shadow: 0 3px 3px 0 var(--light-color);
   animation: spin 1.5s linear infinite;
 }
-
 html body .loadig-text {
   color: white;
 }
-
 html body .pswp__preloader__icn {
   opacity: 0.75;
   width: 14px;
   height: 14px;
   animation: clockwise 500ms linear infinite;
 }
-
 html body .pswp__preloader__cut {
   position: relative;
   width: 7px;
@@ -117,12 +118,11 @@ html body .pswp__preloader__cut {
   top: 0;
   left: 0;
 }
-
 html body .pswp__preloader__donut--fake {
   box-sizing: border-box;
   width: 14px;
   height: 14px;
-  border: 2px solid red;
+  border: 2px solid var(--light-color);
   border-radius: 50%;
   position: absolute;
   top: 0;
@@ -130,7 +130,6 @@ html body .pswp__preloader__donut--fake {
   background: none;
   margin: 0;
 }
-
 html body .pswp__preloader__donut {
   box-sizing: border-box;
   width: 14px;
@@ -149,62 +148,53 @@ html body .pswp__preloader__donut {
   margin: 0;
   animation: donut-rotate 1000ms cubic-bezier(0.4, 0, 0.22, 1) infinite;
 }
-
 @keyframes clockwise {
   0% {
     transform: rotate(0deg);
   }
-
   100% {
     transform: rotate(360deg);
   }
 }
-
 @keyframes donut-rotate {
   0% {
     transform: rotate(0);
   }
-
   50% {
     transform: rotate(-140deg);
   }
-
   100% {
     transform: rotate(0);
   }
 }
-
 html body .scrollbar-track-y {
   width: 5px !important;
 }
-
 html body .scrollbar-track {
   background: none !important;
 }
-
 html body .scrollbar-thumb {
   background: var(--dark-color);
 }
-
+html body .scrollbar-thumb:hover {
+  background: var(--light-color);
+}
 html body #root {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
 }
-
-html body #root .markdown>* {
+html body #root .markdown > * {
   all: revert;
   overflow-wrap: break-word;
 }
-
-html body #root .markdown>* img {
+html body #root .markdown > * img {
   max-height: 400px;
   width: 100%;
   -o-object-fit: contain;
-  object-fit: contain;
+     object-fit: contain;
 }
-
 html body #root .page-container {
   height: 100%;
   width: 100%;
@@ -223,18 +213,15 @@ html body #root .page-container {
 #footer {
   overflow: hidden;
 }
-
 #footer ::-moz-placeholder {
   color: #eee;
   opacity: 1;
 }
-
 #footer ::placeholder {
   color: #eee;
   opacity: 1;
 }
-
-#footer .footer-bg {
+#footer #footer-bg {
   box-shadow: 0 0 45px var(--light-color);
   height: max(100vh, 100vw);
   width: max(100vh, 100vw);
@@ -245,55 +232,15 @@ html body #root .page-container {
   right: 0;
   z-index: -1;
   background-image: var(--footer-gradient), url("../../assets/images/moon.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
-
-
-
-#footer .footer-bg-sm {
-  box-shadow: 0 0 45px var(--light-color);
-  height: 90vw ;
-  width: 90vw;
-  border-radius: 50%;
-  position: absolute;
-  margin-left: 5vw;
-  margin-right: 5vw;
-  padding: 5vw;
-  top: 15vw;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-  background-image: var(--footer-gradient), url("../../assets/images/moon.jpg");
-}
-
-
-#footer .footer-bg-small {
-  box-shadow: 0 0 45px var(--light-color);
-  height:  90vw;
-  width: 90vw;
-  border-radius: 50%;
-  position: absolute;
-  top: 40px;
-  
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-  background-image: var(--footer-gradient), url("../../assets/images/moon.jpg");
-}
-
-
-
-
-
 
 @font-face {
   font-family: "Nasalization";
   src: url("../../assets/fonts/nasalization.ttf");
 }
-
 .logo {
   font-family: "Nasalization";
-}
-
-/*# sourceMappingURL=settings.css.map */
+}/*# sourceMappingURL=settings.css.map */

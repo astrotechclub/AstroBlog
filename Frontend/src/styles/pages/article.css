@@ -23,6 +23,19 @@ html {
   height: 100vh;
   width: 100vw;
 }
+html ::-webkit-scrollbar {
+  width: 5px;
+}
+html ::-webkit-scrollbar-track {
+  background: rgba(61, 61, 61, 0.2431372549);
+}
+html ::-webkit-scrollbar-thumb {
+  background: var(--dark-color);
+  border-radius: 5px;
+}
+html ::-webkit-scrollbar-thumb:hover {
+  background: var(--light-color);
+}
 html body {
   min-height: 100vh;
   height: 100%;
@@ -63,7 +76,7 @@ html body .spinner div:first-child {
   border-radius: 50%;
   transform: translate3d(0, 0, 0);
   animation: spin 2s linear infinite;
-  box-shadow: 0 3px 3px 0 #E21153;
+  box-shadow: 0 3px 3px 0 var(--light-color);
 }
 html body .spinner div:first-child:after,
 html body .spinner div:first-child:before {
@@ -84,7 +97,7 @@ html body .spinner div:first-child:after {
   left: 15px;
   right: 15px;
   bottom: 15px;
-  box-shadow: 0 3px 3px 0 #F60B38;
+  box-shadow: 0 3px 3px 0 var(--light-color);
   animation: spin 1.5s linear infinite;
 }
 html body .loadig-text {
@@ -109,7 +122,7 @@ html body .pswp__preloader__donut--fake {
   box-sizing: border-box;
   width: 14px;
   height: 14px;
-  border: 2px solid red;
+  border: 2px solid var(--light-color);
   border-radius: 50%;
   position: absolute;
   top: 0;
@@ -162,6 +175,9 @@ html body .scrollbar-track {
 }
 html body .scrollbar-thumb {
   background: var(--dark-color);
+}
+html body .scrollbar-thumb:hover {
+  background: var(--light-color);
 }
 html body #root {
   width: 100%;
@@ -216,6 +232,9 @@ html body #root .page-container {
   right: 0;
   z-index: -1;
   background-image: var(--footer-gradient), url("../../assets/images/moon.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 @font-face {
@@ -269,18 +288,4 @@ html body #root .page-container {
   transform: translateX(95px);
   background-color: var(--dark);
   box-shadow: none;
-}
-
-input[type=range] {
-  -webkit-appearance: none;
-  background: #ffffff;
-  height: 5px;
-  border-radius: 10px;
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
-  background: #ffffff;
-  border-radius: 10px;
 }/*# sourceMappingURL=article.css.map */

@@ -93,13 +93,13 @@ function Contacts({ picturesUrl, host }) {
     }
 
     return (
-        <div className="sticky top-4">
+        <div className="lg:sticky top-4">
             <div className="mt-8">
                 <div className="flex flex-row justify-start items-center gap-2 mb-4">
                     <img src={communitiesIcon} alt="suggestions" className="h-[20px] w-[20px]" />
                     <h4 className="text-white font-semibold">My communities</h4>
                 </div>
-                <div>
+                <div className="max-h-80 overflow-auto pr-4">
                     {createMyCommunities()}
                 </div>
             </div>
@@ -108,7 +108,7 @@ function Contacts({ picturesUrl, host }) {
                     <img src={suggestionsIcon} alt="suggestions" className="h-[20px] w-[20px]" />
                     <h4 className="text-white font-semibold">Other communities</h4>
                 </div>
-                <div>
+                <div className="max-h-80 overflow-auto pr-4">
                     {createSuggestions()}
                 </div>
             </div>}
