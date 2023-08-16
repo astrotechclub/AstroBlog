@@ -1,8 +1,26 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useState, useEffect } from "react";
 
 function Notifications({ notifications, host }) {
     const navigate = new useNavigate();
+    const [screenSize, setScreenSize] = useState('');
+
+    const handleResize = () => {
+        const width = window.innerWidth;
+        if (width >= 1024) {
+            setScreenSize('large');
+        } else if (width >= 768) {
+            setScreenSize('medium');
+        } else {
+            setScreenSize('small');
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
+    }, []);
 
     const seeNotification = async (notif, link) => {
         const url = `${host}/notification/see`;
@@ -36,7 +54,7 @@ function Notifications({ notifications, host }) {
         });
     }
     return (
-        <div className="flex flex-col gap-4 px-4 py-3 w-[300px] bg-white max-h-[500px] overflow-auto rounded-md absolute right-0 top-[30px] z-10">
+        <div className={`flex flex-col gap-4 px-4 py-3 w-[300px] bg-white max-h-40 overflow-auto rounded-md absolute ${screenSize === "small" ? "-right-20" : "right-0"} top-[30px] z-40`}>
             {renderNotifications(notifications)}
         </div>
     );

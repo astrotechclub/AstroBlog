@@ -8,6 +8,7 @@ function MoonScene() {
     const canvasRef = useRef();
     const moon_color = 0x730B6F;
 
+
     useEffect(() => {
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera(75, window.innerWidth * .4 / window.innerHeight, 0.01, 1000);
@@ -24,7 +25,7 @@ function MoonScene() {
         scene.add(light);
         var pink = new THREE.AmbientLight(moon_color, 4);
         scene.add(pink);
-        camera.position.set(0, 0, 200);
+        camera.position.set(0, 0, 250);
         let controls = new OrbitControls(camera, renderer.domElement);
         controls.enableZoom = false;
         controls.addEventListener('change', () => {

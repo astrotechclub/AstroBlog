@@ -65,18 +65,3 @@
 }
 
 @include styling_toggle_switch();
-
-input[type="range"] {
-    -webkit-appearance: none;
-    background: #ffffff;
-    height: 5px;
-    border-radius: 10px;
-
-    &::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 20px;
-        height: 20px;
-        background: #ffffff;
-        border-radius: 10px;
-    }
-}

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import FeedNavBar from "../components/FeedNavBar";
 import AnimatedBg from "../components/AnimatedBg";
 import TopArticles from "../components/TopArticles";
-import Banners from "../components/Banners";
 import Contacts from "../components/Contacts";
 import Feed from "../components/Feed";
 import Footer from "../components/Footer";
@@ -19,9 +18,23 @@ function Home() {
     const host = "http://localhost:5000";
     const picturesUrl = `${host}/picture/`;
     const navigate = useNavigate();
+    const [screenSize, setScreenSize] = useState('');
 
-    console.log(articles);
+    const handleResize = () => {
+        const width = window.innerWidth;
+        if (width >= 1024) {
+            setScreenSize('large');
+        } else if (width >= 768) {
+            setScreenSize('medium');
+        } else {
+            setScreenSize('small');
+        }
+    };
 
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
+    }, [])
 
     useEffect(() => {
         const fetchArticles = async () => {
@@ -60,7 +73,7 @@ function Home() {
 
     return (
         <>
-            {articles && profile?.fullname ?
+            {articles && profile ?
                 <div id="feed" className="bg-gradient-to-b from-page-light-dark to-page-dark relative">
                     <AnimatedBg />
                     <div className="relative z-10">
@@ -70,14 +83,25 @@ function Home() {
                         <div className=" px-8 md:px-20 flex flex-col lg:grid lg:grid-cols-8 lg:grid-rows-1 gap-8 mt-4 mb-16">
                             {/* <Banners /> */}
                             <div className="hidden lg:block"></div>
-                            <Feed articles={articles} maxArticlesPerPage={maxArticlesPerPage} setArticles={setArticles} isProfile={false} picturesUrl={picturesUrl} host={host} />
-                            <div className=" lg:col-span-2 h-full w-full relative">
-                                <Contacts picturesUrl={picturesUrl} host={host} />
-                            </div>
+                            {
+                                (screenSize === 'medium' || screenSize === 'small') ? <>
+                                    <div className=" lg:col-span-2 h-full w-full relative">
+                                        <Contacts picturesUrl={picturesUrl} host={host} />
+                                    </div>
+                                    <Feed articles={articles} maxArticlesPerPage={maxArticlesPerPage} setArticles={setArticles} isProfile={false} picturesUrl={picturesUrl} host={host} />
+                                </> :
+                                    <>
+                                        <Feed articles={articles} maxArticlesPerPage={maxArticlesPerPage} setArticles={setArticles} isProfile={false} picturesUrl={picturesUrl} host={host} />
+                                        <div className=" lg:col-span-2 h-full w-full relative">
+                                            <Contacts picturesUrl={picturesUrl} host={host} />
+                                        </div>
+                                    </>
+                            }
                         </div>
                         <Footer profile={profile} />
                     </div>
-                </div> : <LoadingPage />
+                </div>
+                : <LoadingPage />
             }
         </>
 
