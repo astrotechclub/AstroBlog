@@ -73,7 +73,7 @@ function Home() {
 
     return (
         <>
-            {articles && profile ?
+            {articles && profile?.fullname ?
                 <div id="feed" className="bg-gradient-to-b from-page-light-dark to-page-dark relative">
                     <AnimatedBg />
                     <div className="relative z-10">

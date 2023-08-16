@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LoadingComponent from "./LoadingComponent";
 
 function Comments({ comments, picturesUrl, dark }) {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ function Comments({ comments, picturesUrl, dark }) {
     }
     return (
         <>
-            {createComments()}
+            {comments ? createComments() : <LoadingComponent dark={true} />}
         </>
     );
 }

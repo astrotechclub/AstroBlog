@@ -57,16 +57,18 @@ async function createArticle(article, user) {
     if ((fields && fields.length > 0 && row2 && row2.affectedRows > 0) || (row2 == undefined && row1 && row1.affectedRows > 0)) {
         [row3] = await pool.query("UPDATE user set nb_publications = nb_publications + 1 where id = ?", [user]);
     }
-    let row4 = undefined;
+    let row35 = undefined;
     if (row3 && row3.affectedRows > 0) {
-        console.log("rani hna");
-        const title = `New article in ${article.community}`;
+        [row35] = await pool.query("SELECT community_name from community where id = ?", article.community);
+    }
+    let row4 = undefined;
+    if (row35 && row35.length > 0) {
+        const title = `New article in ${row35[0].community_name} community`;
         const link = `/article/${row1.insertId}`;
         [row4] = await pool.query("INSERT INTO notif (title,picture,date_time,link) value (?,?,?,?)", [title, article.article_img, cdate, link]);
     }
     let row5 = undefined;
     if (row4 && row4.affectedRows > 0) {
-        console.log("rani hna");
         [row5] = await pool.query("INSERT INTO user_notif (id_user,id_notif) select id , ? from user where id != ? and id in (select id_user from user_community where id_community = ?)", [row4.insertId, user, article.community]);
     }
     return row5 ? row5 : row4 ? row4 : row3 ? row3 : row2 ? row2 : row1;

@@ -30,6 +30,7 @@ function SendCode({ email, inputs, host }) {
         for (let i = 0; i < length; i++) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
+        console.log(result);
         return result;
     }
 
@@ -66,6 +67,7 @@ function SendCode({ email, inputs, host }) {
 
     const handleClick = () => {
         const c = generateCode(8);
+        setStop(false);
         setCode(c);
         sendEmail(c);
         setEmailSent(true);
@@ -102,7 +104,11 @@ function SendCode({ email, inputs, host }) {
                     <span className='block font-bold text-ms text-light-pink py-2 w-full text-center'>{stop ? "time over" : countDown}</span>
                     {!stop ? <input type="text" placeholder="code" className="outline-0 bg-transparent font-text text-xl text-grey w-[150px] p-4 border border-boder-grey rounded-md bg-input-light-grey text-center" onChange={(e) => setInputCode(e.target.value)} /> : <span className="text-xl text-light-text">Click re-send code</span>}
                     {inputCode && inputCode != code && < span className="block text-errors text-mini-text font-medium w-[150px] text-start h-4">Wrong code!</span>}
-                    <button className="bg-transparent border-none outline-none underline text-light-pink font-semibold text-small-subtitle pt-8" onClick={handleClick}>Re-send Code</button>
+                    {stop ?
+                        <button className="bg-transparent border-none outline-none underline text-light-pink font-semibold text-small-subtitle pt-8" onClick={handleClick}>Re-send Code</button>
+                        :
+                        <button className="bg-transparent border-none outline-none underline text-light-text font-semibold text-small-subtitle pt-8" disabled onClick={handleClick}>Re-send Code</button>
+                    }
                 </div>
             </div>
         </div >

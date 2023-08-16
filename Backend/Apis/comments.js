@@ -38,7 +38,7 @@ router.route("/:id")
                     const user = decoded.userId;
                     const result = await AddComment(user, req.body, id);
                     if (result.affectedRows > 0) {
-                        return res.status(200);
+                        return res.status(200).send("ok");
                     } else {
                         return res.sendStatus(401);
                     }

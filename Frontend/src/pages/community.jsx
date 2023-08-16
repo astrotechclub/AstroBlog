@@ -16,7 +16,7 @@ import axios from "axios";
 
 
 function Community() {
-    const [articles, setArticles] = useState([]);
+    const [articles, setArticles] = useState();
     const [profile, setProfile] = useState();
     const [community, setCommunity] = useState();
     const host = "http://localhost:5000";
@@ -56,8 +56,7 @@ function Community() {
             } else {
                 if (result.status === 200) {
                     result.json().then(json => {
-                        setArticles(json.articles);
-                        setProfile({ id: json.userId });
+                        setArticles(json);
                     });
                 } else {
                     navigate("/E404");
@@ -67,6 +66,18 @@ function Community() {
 
         fetchArticles();
 
+    }, []);
+
+    useEffect(() => {
+        const fetchProfile = (async () => {
+            const result = await fetch(`${host}/user/mine`, { credentials: "include" });
+            if (result.status == 401 || result.status == 403) navigate("/login");
+            if (result.status == 404) navigate("/E404");
+            result.json().then(data => {
+                setProfile(data);
+            });
+        });
+        fetchProfile();
     }, []);
 
     useEffect(() => {
@@ -130,7 +141,7 @@ function Community() {
 
     return (
         <>
-            {articles && community && profile ?
+            {articles && community && profile?.fullname ?
                 <div id="feed" className="bg-gradient-to-b from-page-light-dark to-page-dark relative">
                     <AnimatedBg />
                     <div className="relative z-10 min-h-[100vh]">

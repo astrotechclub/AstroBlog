@@ -47,7 +47,7 @@ function Settings() {
                 if (res.status == 401 || res.status == 403) navigate("/login");
                 if (res.status == 404) navigate("/E404");
                 if (res.status === 200) {
-                    console.log("success");
+                    navigate("/profile");
                 }
             }).catch(err => { setErrors(err.response.data); console.log(errors); });
         }
@@ -73,7 +73,7 @@ function Settings() {
 
     return (
         <>
-            {profile ? <div className="bg-gradient-to-b from-page-light-dark to-page-dark relative">
+            {profile?.fullname ? <div className="bg-gradient-to-b from-page-light-dark to-page-dark relative">
                 <SmoothScroll />
                 <AnimatedBg />
                 <div className="relative z-10 min-h-[100vh]">
