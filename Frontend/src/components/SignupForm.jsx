@@ -37,14 +37,14 @@ function SignupForm({ host, blur, setShowConfMessage, setEmail, inputs, setInput
                 <span className='px-12 md:px-20  block font-semibold text-grey mt-4'>Create an account</span>
                 <form action="" onSubmit={handleSubmit} className='my-8 flex flex-col justify-center items-center w-full'>
                     <div className='p-4 border border-boder-grey rounded-md bg-input-light-grey w-3/4 flex flex-row items-center justify-between'>
-                        <input type="text" name="fullname" placeholder='fullname' onChange={(event) => { setInputs({ ...inputs, fullname: event.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
+                        <input type="text" name="fullname" maxLength="40" placeholder='fullname' onChange={(event) => { setInputs({ ...inputs, fullname: event.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
                         <img src={userIcon} alt="user" className='inline h-4 w-4' />
                     </div>
                     {errors && errors.fullname && <div className='w-3/4 text-xs text-errors mt-1'>
                         {errors.fullname}
                     </div>}
                     <div className='p-4 border border-boder-grey rounded-md bg-input-light-grey w-3/4 flex flex-row items-center justify-between mt-4'>
-                        <input type="email" name="email" placeholder='email' onChange={(event) => { setInputs({ ...inputs, email: event.target.value }); setEmail(event.target.value); }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
+                        <input type="email" name="email" maxLength="35" placeholder='email' onChange={(event) => { setInputs({ ...inputs, email: event.target.value }); setEmail(event.target.value); }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
                         <img src={emailIcon} alt="email" className='inline h-4 w-4' />
                     </div>
                     {errors && errors.email && <div className='w-3/4 text-xs text-errors mt-1'>
@@ -63,20 +63,20 @@ function SignupForm({ host, blur, setShowConfMessage, setEmail, inputs, setInput
                         {errors.about}
                     </div>}
                     {showWhoRU ? <div className='p-4 border border-boder-grey rounded-md bg-input-light-grey w-3/4 flex flex-row items-center justify-between mt-4'>
-                        <input type="text" name="other" placeholder='Who exactly?' onChange={(e) => { setInputs({ ...inputs, other: e.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-full' />
+                        <input type="text" name="other" maxLength="100" placeholder='Who exactly?' onChange={(e) => { setInputs({ ...inputs, other: e.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-full' />
                     </div> : <></>}
                     {showWhoRU && errors && errors.other && <div className='w-3/4 text-xs text-errors mt-1'>
                         {errors.other}
                     </div>}
                     <div className='p-4 border border-boder-grey rounded-md bg-input-light-grey w-3/4 flex flex-row items-center justify-between mt-4'>
-                        <input type="password" name="password" placeholder='password' onChange={(e) => { setInputs({ ...inputs, password: e.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
+                        <input type="password" name="password" maxLength="30" placeholder='password' onChange={(e) => { setInputs({ ...inputs, password: e.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
                         <img src={passwordIcon} alt="password" className='inline h-4 w-4' />
                     </div>
                     {errors && errors.password && <div className='w-3/4 text-xs text-errors mt-1'>
                         {errors.password}
                     </div>}
                     <div className='p-4 border border-boder-grey rounded-md bg-input-light-grey w-3/4 flex flex-row items-center justify-between mt-4'>
-                        <input type="password" name="password_c" placeholder='password confirmation' onChange={(e) => { setInputs({ ...inputs, password_c: e.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
+                        <input type="password" name="password_c" maxLength="30" placeholder='password confirmation' onChange={(e) => { setInputs({ ...inputs, password_c: e.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
                         <img src={passwordIcon} alt="password" className='inline h-4 w-4' />
                     </div>
                     {errors && errors.password_c && <div className='w-3/4 text-xs text-errors mt-1 mb-4'>
@@ -90,10 +90,10 @@ function SignupForm({ host, blur, setShowConfMessage, setEmail, inputs, setInput
                         <button className='w-3/4 text-white rounded-md outline-none border-none bg-gradient-to-r from-light-pink to-dark-pink h-[50px] font-medium text-sm'>Sign up</button>
                         : <button className='w-3/4 text-white rounded-md outline-none border-none bg-grey h-[50px] font-medium text-sm' disabled>Sign up</button>
                     }
-                    <div className='flex flex-row items-center justify-center gap-4 h-[50px] w-3/4 rounded-md border border-border-grey mt-4 cursor-pointer'>
+                    {/* <div className='flex flex-row items-center justify-center gap-4 h-[50px] w-3/4 rounded-md border border-border-grey mt-4 cursor-pointer'>
                         <img src={googleLogo} alt="google" className='h-4 w-4' />
                         <span className='font-medium text-sm text-grey'>Sign up with Google</span>
-                    </div>
+                    </div> */}
                 </form>
             </div>
             <div className='flex flex-row items-center justify-center w-full gap-2 mt-10 pb-4'>

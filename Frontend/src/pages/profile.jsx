@@ -52,7 +52,6 @@ function Profile() {
                 if (result.status === 200) {
                     result.json().then(json => {
                         setArticles(json);
-                        console.log(articles);
                     });
                 } else {
                     navigate("/E404");
@@ -79,7 +78,7 @@ function Profile() {
 
     return (
         <>
-            {articles && profile ?
+            {articles && profile?.fullname ?
                 <div id="feed" className="bg-gradient-to-b from-page-light-dark to-page-dark relative">
                     <AnimatedBg />
                     <div className="relative z-10 min-h-[100vh]">

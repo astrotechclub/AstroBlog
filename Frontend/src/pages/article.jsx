@@ -99,7 +99,7 @@ function Article() {
     }
 
     const createFields = (article) => {
-        return article.fields.map(function (field) { return <span className="border border-light-pink text-light-pink text-xs font-medium py-1 px-2 rounded-[10px] mr-2">{field}</span> });
+        return article.fields.map(function (field) { return <span key={"article_" + field + article.id} className="border border-light-pink text-light-pink text-xs font-medium py-1 px-2 rounded-[10px] mr-2">{field}</span> });
     }
 
     const handleLoadMore = () => {
@@ -126,7 +126,7 @@ function Article() {
     return (
         <>
             {
-                article ? <div className={`${dark ? "bg-gradient-to-b from-page-light-dark to-page-dark text-white" : "bg-white text-black"} relative`} key={article.id}>
+                article && comments && profile?.fullname ? <div className={`${dark ? "bg-gradient-to-b from-page-light-dark to-page-dark text-white" : "bg-white text-black"} relative`} key={article.id}>
                     <SmoothScroll />
                     <div className="relative z-10 min-h-[100vh]">
                         <div className="absolute z-30  top-0 left-0 right-0 ">

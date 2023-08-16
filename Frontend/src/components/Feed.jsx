@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import LoadingComponent from "./LoadingComponent";
 
 function createArticleCards(articles, picturesUrl) {
-    return articles.map(function (article) { return <ArticleCard infos={article} picturesUrl={picturesUrl} /> });
+    return articles.map(function (article) { return <ArticleCard key={article.id + "_articleCard"} infos={article} picturesUrl={picturesUrl} /> });
 }
 
 function Feed({ articles, maxArticlesPerPage, setArticles, isProfile, picturesUrl, host, isFollower, community }) {

@@ -3,6 +3,8 @@ import suggestionsIcon from "../assets/icons/link.png";
 import communitiesIcon from "../assets/icons/group.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import LoadingComponent from "./LoadingComponent";
+
 
 function Contacts({ picturesUrl, host }) {
     const [suggestions, setSuggestions] = useState([]);
@@ -38,7 +40,7 @@ function Contacts({ picturesUrl, host }) {
 
     const createSuggestions = () => {
         return suggestions.map(function (community) {
-            return <div className="flex flex-row items-center justify-between my-4 gap-2" >
+            return <div key={"suggestion_" + community.id} className="flex flex-row items-center justify-between my-4 gap-2" >
                 <div className="flex flex-row items-center justify-start gap-2 cursor-pointer" onClick={() => navigate(`/community/${community.id}`)}>
                     <img src={picturesUrl + community.img} alt="community" className="h-[40px] w-[40px] rounded-full object-cover" />
                     <div className="block">
@@ -53,7 +55,7 @@ function Contacts({ picturesUrl, host }) {
 
     const createMyCommunities = () => {
         return my_communities.map(function (community) {
-            return <div className="flex flex-row items-center justify-between my-4 gap-2">
+            return <div key={"my_community_" + community.id} className="flex flex-row items-center justify-between my-4 gap-2">
                 <div className="flex flex-row items-center justify-start gap-2 cursor-pointer" onClick={() => navigate(`/community/${community.id}`)}>
                     <img src={picturesUrl + community.img} alt="community" className="h-[40px] w-[40px] rounded-full object-cover" />
                     <div className="block">
@@ -100,7 +102,7 @@ function Contacts({ picturesUrl, host }) {
                     <h4 className="text-white font-semibold">My communities</h4>
                 </div>
                 <div className="max-h-80 overflow-auto pr-4">
-                    {createMyCommunities()}
+                    {my_communities ? createMyCommunities() : <LoadingComponent dark={true} />}
                 </div>
             </div>
             {suggestions.length > 0 && <div className="mt-8">
@@ -109,7 +111,7 @@ function Contacts({ picturesUrl, host }) {
                     <h4 className="text-white font-semibold">Other communities</h4>
                 </div>
                 <div className="max-h-80 overflow-auto pr-4">
-                    {createSuggestions()}
+                    {suggestions ? createSuggestions() : <LoadingComponent dark={true} />}
                 </div>
             </div>}
         </div>

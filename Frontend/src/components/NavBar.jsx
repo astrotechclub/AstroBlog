@@ -31,7 +31,6 @@ function NavBar({ profile, picturesUrl, host }) {
 
     const handleLogout = async () => {
         const res = await fetch(`${host}/logout`, { credentials: "include" });
-        console.log(res);
         if (res.status == 401 || res.status == 403) navigate("/login");
         if (res.status == 404) navigate("/E404");
         if (res.status === 200) {

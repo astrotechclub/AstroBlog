@@ -6,12 +6,10 @@ import moonBg from "../assets/images/moon.jpg";
 import emailjs from '@emailjs/browser';
 
 function Footer({ profile }) {
-    console.log(profile);
     const [message, setMessage] = useState();
     const email = profile.email;
     const form = useRef();
     const sendEmail = (e) => {
-        console.log(email);
         e.preventDefault();
         //k6_TeWWtLOqIFoB7v
         emailjs.sendForm('service_wg3dy3t', 'template_6zpv402', form.current, 'k6_TeWWtLOqIFoB7v')

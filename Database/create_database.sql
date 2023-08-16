@@ -2,12 +2,12 @@ CREATE DATABASE IF NOT EXISTS astroblog_db;
 USE astroblog_db;
 
 CREATE TABLE IF NOT EXISTS USER(
-    id int primary key AUTO_INCREMENT,
-    email varchar(50) not null,
-    fullname varchar(50) not null,
+    id varchar(40) primary key,
+    email varchar(35) not null,
+    fullname varchar(40) not null,
     nb_publications int not null default 0,
     nb_likes int not null default 0,
-    is_admin bool not null,
+    is_admin bool not null default 0,
     profile_pic varchar(40) not null default "d8d3404fc80f99d5f4bf943d054dd772",
     category varchar(15) not null,
     details varchar(100),
@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS COMMUNITY(
 
 CREATE TABLE IF NOT EXISTS ARTICLE(
     id int primary key AUTO_INCREMENT,
-    author int not null,
+    author varchar(40) not null,
     community int not null,
-    title varchar(100) not null,
+    title varchar(50) not null,
     article_description varchar(255) not null,
     date_time datetime not null,
     article_img varchar(200),
@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS FIELD(
 );
 
 CREATE TABLE IF NOT EXISTS USER_COMMUNITY(
-    id_community int not null AUTO_INCREMENT,
-    id_user int not null,
+    id_community int not null,
+    id_user varchar(40) not null,
     foreign key (id_community) references community(id),
     foreign key(id_user) references user(id),
     primary key (id_community , id_user)
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS USER_COMMUNITY(
 CREATE TABLE IF NOT EXISTS COMMENT(
     id int not null primary key AUTO_INCREMENT,
     article int not null,
-    user int not null ,
+    user varchar(40) not null ,
     date_time datetime not null,
     comment_text varchar(255) not null,
     foreign key (user) references user(id),
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS COMMENT(
 );
 
 CREATE TABLE IF NOT EXISTS USER_LIKES_ARTICLE(
-    user int not null,
+    user varchar(40) not null,
     article int not null,
     foreign key (user) references user(id),
     foreign key (article) references article(id),
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS USER_LIKES_ARTICLE(
 );
 
 CREATE TABLE IF NOT EXISTS USER_DISLIKES_ARTICLE(
-    user int not null,
+    user varchar(40) not null,
     article int not null,
     foreign key (user) references user(id),
     foreign key (article) references article(id),
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS NOTIF(
 
 CREATE TABLE IF NOT EXISTS USER_NOTIF(
     id_notif int not null,
-    id_user int not null,
+    id_user varchar(40) not null,
     seen bool not null default 0,
     primary key(id_notif , id_user),
     foreign key (id_notif) references  NOTIF(id),

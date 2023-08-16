@@ -1,6 +1,7 @@
 const mysql = require("mysql2");
 const env = require("dotenv");
 const bcrypt = require("bcrypt");
+const uuid = require("uuid");
 
 env.config();
 
@@ -17,32 +18,33 @@ async function emailExists(email) {
 }
 
 async function addNewUser(user) {
+    const id = uuid.v4();
     let sql;
-    let inputs = [];
+    let inputs = [id];
     const salt = await bcrypt.genSalt(10);
     const password = await bcrypt.hash(user.password, salt);
     if (user.details) {
-        sql = "INSERT INTO user (email,fullname,is_admin,category, details) values (?,?,0,?,?,?)";
+        sql = "INSERT INTO user (id,email,fullname,category, details) values (?,?,?,?,?,?)";
         inputs.push(user.email, user.fullname, user.about, user.other, password);
     } else {
-        sql = "INSERT INTO user (email,fullname,is_admin,category,user_password) values (?,?,0,?,?)";
+        sql = "INSERT INTO user (id,email,fullname,category,user_password) values (?,?,?,?,?)";
         inputs.push(user.email, user.fullname, user.about, password);
     }
     const [result] = await pool.query(sql, inputs);
-    const row2 = followAstrotech(result);
-    return row2;
+    let row2 = undefined;
+    if (result && result.affectedRows > 0) {
+        row2 = followAstrotech(id);
+    }
+    return row2 ? row2 : result;
 }
 
-async function followAstrotech(row1) {
-    let row2 = undefined;
-    if (row1 && row1.affectedRows > 0) {
-        [row2] = await pool.query("INSERT INTO user_community (id_user , id_community) values (? ,?)", [row1.insertId, 1]);
-    }
+async function followAstrotech(id) {
+    const [row2] = await pool.query("INSERT INTO user_community (id_user , id_community) values (? ,?)", [id, 1]);
     let row3 = undefined;
     if (row2 && row2.affectedRows > 0) {
         [row3] = await pool.query("UPDATE community set nb_followers = nb_followers +1 where id = ?", [1]);
     }
-    return row3 ? row3 : row2 ? row2 : row1
+    return row3 ? row3 : row2
 }
 
 async function getPassword(email) {
@@ -118,8 +120,10 @@ async function getPasswordById(id) {
 
 async function updateUserPicture(id, picture) {
     const [old_picture] = await pool.query("SELECT profile_pic from user where id = ?", [id]);
-    const [row] = await pool.query("UPDATE user set profile_pic = ? where id = ?", [picture, id]);
-    return old_picture[0].profile_pic;
+    if (old_picture && old_picture.length > 0) {
+        const [row] = await pool.query("UPDATE user set profile_pic = ? where id = ?", [picture, id]);
+    }
+    return old_picture.length > 0 ? old_picture[0].profile_pic : undefined;
 }
 
 module.exports = { addNewUser, emailExists, getPassword, getUserId, setRefreshToken, refreshTokenExists, updateRefreshToken, getUserProfile, updateUser, isMyEmail, getPasswordById, updateUserPicture };

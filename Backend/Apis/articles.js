@@ -21,7 +21,7 @@ router.route("/")
                     const user = decoded.userId;
                     const result = await createArticle(req.body, user);
                     if (result.affectedRows > 0) {
-                        return res.status(201);
+                        return res.status(200).send("ok");
                     } else {
                         return res.sendStatus(400);
                     }
@@ -45,7 +45,7 @@ router.route("/update_likes/:id")
                     const user = decoded.userId;
                     const result = await updateLikes(id, user, params);
                     if (result.affectedRows > 0) {
-                        return res.status(200);
+                        return res.status(200).send("ok");
                     } else {
                         return res.sendStatus(400);
                     }
@@ -69,7 +69,7 @@ router.route("/update_dislikes/:id")
                     const user = decoded.userId;
                     const result = await updateDislikes(id, user, params);
                     if (result.affectedRows > 0) {
-                        return res.status(200);
+                        return res.status(200).send("ok");
                     } else {
                         return res.sendStatus(400);
                     }
@@ -181,7 +181,7 @@ router.route("/community/:id/-:max")
         const max = parseInt(req.params.max);
         const id = parseInt(req.params.id);
         const result = await getCommunityArticles(id, max);
-        return res.send({ articles: result, userId: req.userId });
+        return res.send(result);
     });
 
 router.route("/:id")

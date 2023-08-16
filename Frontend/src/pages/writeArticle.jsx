@@ -30,7 +30,7 @@ function WriteArticle() {
 
     return (
         <>
-            {profile ? <div id="feed" className="bg-gradient-to-b from-page-light-dark to-page-dark relative">
+            {profile?.fullname ? <div id="feed" className="bg-gradient-to-b from-page-light-dark to-page-dark relative">
                 < AnimatedBg />
                 <div className="relative z-10 min-h-[100vh]">
                     <NavBar profile={profile} picturesUrl={picturesUrl} host={host} />

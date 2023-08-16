@@ -42,7 +42,7 @@ router.route("/update")
                 } else {
                     const user = decoded.userId;
                     const result = await updateUser(user, req.body);
-                    return res.status(200);
+                    return res.status(200).send("ok");
                 }
             }
         );
@@ -63,8 +63,11 @@ router.route("/updatePicture")
                     if (result != "d8d3404fc80f99d5f4bf943d054dd772") {
                         const imgPath = path.join(__dirname, "..", "AllPictures", result);
                         try {
-                            fs.unlink(imgPath);
-                            return res.status(200).send('File deleted successfully');
+                            fs.unlink(imgPath, function (err) {
+                                if (err) throw err;
+                                console.log('File deleted!');
+                            });
+                            return res.status(200).send('ok');
                         } catch (err) {
                             console.error('Error deleting file:', err);
                             return res.status(500).send('Internal Server Error');

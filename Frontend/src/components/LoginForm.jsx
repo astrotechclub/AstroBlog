@@ -37,11 +37,11 @@ function LoginForm({ host }) {
                 <span className='px-12 md:px-20 block font-semibold text-grey mt-4'>Login to your account</span>
                 <form action="" onSubmit={handleSubmit} className='my-8 flex flex-col justify-center items-center w-full'>
                     <div className='p-4 border border-boder-grey rounded-md bg-input-light-grey w-3/4 flex flex-row items-center justify-between mb-4'>
-                        <input type="text" name="email" placeholder='email' onChange={(e) => { setInputs({ ...inputs, email: e.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
+                        <input type="text" maxLength="35" name="email" placeholder='email' onChange={(e) => { setInputs({ ...inputs, email: e.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
                         <img src={userIcon} alt="user" className='inline h-4 w-4' />
                     </div>
                     <div className='p-4 border border-boder-grey rounded-md bg-input-light-grey w-3/4 flex flex-row items-center justify-between mb-1'>
-                        <input type="password" name="password" placeholder='password' onChange={(e) => { setInputs({ ...inputs, password: e.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
+                        <input type="password" maxLength="30" name="password" placeholder='password' onChange={(e) => { setInputs({ ...inputs, password: e.target.value }) }} className='inline outline-0 bg-transparent font-text text-sm w-5/6' />
                         <img src={passwordIcon} alt="password" className='inline h-4 w-4' />
                     </div>
                     {errors && <div className='w-3/4 text-xs text-errors mb-4'>
@@ -55,10 +55,10 @@ function LoginForm({ host }) {
                         <a href="." className='decoration-none text-light-pink text-xs'>Forget your password?</a>
                     </div> */}
                     <button className='mt-16 w-3/4 text-white rounded-md outline-none border-none bg-gradient-to-r from-light-pink to-dark-pink h-[50px] font-medium text-sm'>Login</button>
-                    <div className='flex flex-row items-center justify-center gap-4 h-[50px] w-3/4 rounded-md border border-border-grey mt-4 cursor-pointer'>
+                    {/* <div className='flex flex-row items-center justify-center gap-4 h-[50px] w-3/4 rounded-md border border-border-grey mt-4 cursor-pointer'>
                         <img src={googleLogo} alt="google" className='h-4 w-4' />
                         <span className='font-medium text-sm text-grey'>Sign in with Google</span>
-                    </div>
+                    </div> */}
                 </form>
             </div>
             <div className='flex flex-row items-center justify-center w-full gap-2 pb-4'>

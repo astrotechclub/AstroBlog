@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 function ArticleCard({ infos, picturesUrl }) {
     const navigate = useNavigate();
     const createFields = () => {
-        return infos.fields.map(function (field) { return <span className="border border-light-pink text-light-pink text-xs font-medium py-1 px-2 rounded-[10px] mr-2">{field}</span> });
+        return infos.fields.map(function (field) { return <span key={field + infos.id + "_field"} className="border border-light-pink text-light-pink text-xs font-medium py-1 px-2 rounded-[10px] mr-2">{field}</span> });
     }
     return (
         <div className="mt-10 border-b border-feed-border pb-4">
