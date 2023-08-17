@@ -79,7 +79,16 @@ function Reviews({ alikes, adislikes, articleId, author, community, host, dark }
     useEffect(() => {
         const fetchIlikedArticle = async () => {
             const url = `${host}/articles/likes/${articleId}`;
-            const result = await fetch(url, { credentials: "include" });
+            var result = await fetch(url, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(url, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
             if (result.status == 200) {
                 result.json().then(json => setLikesChanged(json.isLiked));
             } else {
@@ -92,7 +101,16 @@ function Reviews({ alikes, adislikes, articleId, author, community, host, dark }
     useEffect(() => {
         const fetchIdislikedArticle = async () => {
             const url = `${host}/articles/dislikes/${articleId}`;
-            const result = await fetch(url, { credentials: "include" });
+            var result = await fetch(url, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(url, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
             if (result.status == 200) {
                 result.json().then(json => setDislikesChanged(json.isDisliked));
             } else {

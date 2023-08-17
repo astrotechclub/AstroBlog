@@ -54,7 +54,16 @@ function FeedNavBar({ profile, picturesUrl, host }) {
         window.addEventListener('resize', handleResize);
         handleResize();
         const fetchNotifications = (async () => {
-            const result = await fetch(`${host}/notification/mine`, { credentials: "include" });
+            var result = await fetch(`${host}/notification/mine`, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(`${host}/notification/mine`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
             result.json().then(data => {
                 setNotifications(data);
             });
