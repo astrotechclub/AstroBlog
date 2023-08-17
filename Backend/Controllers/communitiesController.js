@@ -1,5 +1,6 @@
 const mysql = require("mysql2");
 const env = require("dotenv");
+const logger = require("../Middlewares/winstonLogger");
 env.config();
 
 const pool = mysql.createPool({
@@ -36,7 +37,15 @@ async function unfollowCommunity(community, user) {
     const [row1] = await pool.query("UPDATE community set nb_followers = nb_followers-1 where id = ?", [community]);
     let row2 = undefined;
     if (row1 && row1.affectedRows > 0) {
+        logger.http(`user: ${user}, nb_followers of the community ${community} has decreased`);
         [row2] = await pool.query("DELETE FROM user_community where id_user = ? and id_community = ? ", [user, community]);
+    } else {
+        logger.error(`user: ${user} , nb_followers of the community ${community} has failed to decrease`);
+    }
+    if (row2) {
+        logger.http(`user: ${user}, deleting with success the row ${user}-${community} from user_community`);
+    } else {
+        logger.error(`user: ${user},deleting the row ${user}-${community} from user_community has failed`);
     }
     return row2 ? row2 : row1;
 }
@@ -45,7 +54,15 @@ async function followCommunity(community, user) {
     const [row1] = await pool.query("UPDATE community set nb_followers = nb_followers+1 where id = ?", [community]);
     let row2 = undefined;
     if (row1 && row1.affectedRows > 0) {
+        logger.http(`user: ${user}, nb_followers of the community ${community} has increased`);
         [row2] = await pool.query("INSERT into user_community (id_user , id_community) value (?,?)", [user, community]);
+    } else {
+        logger.error(`user: ${user}, nb_followers of the community ${community} has failed to increase`);
+    }
+    if (row2) {
+        logger.http(`user: ${user}, inserting with success the row ${user}-${community} in user_community`);
+    } else {
+        logger.error(`user: ${user}, inserting the row ${user}-${community} in user_community has failed`);
     }
     return row2 ? row2 : row1;
 }

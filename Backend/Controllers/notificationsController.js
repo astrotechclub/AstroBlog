@@ -1,5 +1,6 @@
 const mysql = require("mysql2");
 const env = require("dotenv");
+const logger = require("../Middlewares/winstonLogger");
 env.config();
 
 const pool = mysql.createPool({
@@ -16,6 +17,11 @@ async function getNotifications(user) {
 
 async function seeNotification(user, notif) {
     const [row] = await pool.query("UPDATE user_notif set seen = 1 where id_user = ? and id_notif = ?", [user, notif]);
+    if (row) {
+        logger.http(`user: ${user} has seen the notification ${notif}`);
+    } else {
+        logger.error(`user: ${user} has failed seeing the notification ${notif}`);
+    }
     return row;
 }
 

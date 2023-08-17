@@ -40,10 +40,23 @@ function NavBar({ profile, picturesUrl, host }) {
 
     useEffect(() => {
         const fetchNotifications = (async () => {
-            const result = await fetch(`${host}/notification/mine`, { credentials: "include" });
-            result.json().then(data => {
-                setNotifications(data);
-            });
+            var result = await fetch(`${host}/notification/mine`, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(`${host}/notification/mine`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
+            if (result.status === 200) {
+                result.json().then(data => {
+                    setNotifications(data);
+                });
+            } else {
+                navigate("/E404");
+            }
         });
         fetchNotifications();
     }, []);

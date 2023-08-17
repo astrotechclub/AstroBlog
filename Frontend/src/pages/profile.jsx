@@ -12,7 +12,6 @@ import SearchBar from "../components/SearchBar";
 import LoadingPage from "../components/LoadingPage";
 
 
-
 function Profile() {
     const [articles, setArticles] = useState([]);
     const [profile, setProfile] = useState();
@@ -42,20 +41,20 @@ function Profile() {
         const fetchMyArticles = async () => {
             var result = await fetch(`${host}/articles/mine/-${maxArticlesPerPage}`, { credentials: "include" });
             if (result.status === 401 || result.status === 403) {
-                const data = await fetch(`${host}/refresh`, { credentials: "include" });
-                if (data.status === 401 || data.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
                     navigate("/login");
                 } else {
-                    navigate("/home");
+                    result = await fetch(`${host}/articles/mine/-${maxArticlesPerPage}`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
                 }
+            }
+            if (result.status === 200) {
+                result.json().then(json => {
+                    setArticles(json);
+                });
             } else {
-                if (result.status === 200) {
-                    result.json().then(json => {
-                        setArticles(json);
-                    });
-                } else {
-                    navigate("/E404");
-                }
+                navigate("/E404");
             }
         };
 
@@ -65,10 +64,18 @@ function Profile() {
 
     useEffect(() => {
         const fetchProfile = (async () => {
-            const result = await fetch(`${host}/user/mine`, { credentials: "include" });
-            if (result.status == 401 || result.status == 403) navigate("/login");
+            var result = await fetch(`${host}/user/mine`, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(`${host}/user/mine`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
             if (result.status == 404) navigate("/E404");
-            result.json().then(data => {
+            if (result.status === 200) result.json().then(data => {
                 setProfile(data);
                 document.title = profile?.fullname ? profile.fullname : "Astroblog";
             });

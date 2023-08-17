@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import AnimatedBg from "../components/AnimatedBg";
-import filterIcon from "../assets/icons/filter.png";
-import Contacts from "../components/Contacts";
 import Feed from "../components/Feed";
 import Footer from "../components/Footer";
 import "../styles/pages/feed.css";
@@ -47,20 +45,20 @@ function Community() {
         const fetchArticles = async () => {
             var result = await fetch(`${host}/articles/community/${community_id}/-${maxArticlesPerPage}`, { credentials: "include" });
             if (result.status === 401 || result.status === 403) {
-                const data = await fetch(`${host}/refresh`, { credentials: "include" });
-                if (data.status === 401 || data.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
                     navigate("/login");
                 } else {
-                    navigate("/home");
+                    result = await fetch(`${host}/articles/community/${community_id}/-${maxArticlesPerPage}`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
                 }
+            }
+            if (result.status === 200) {
+                result.json().then(json => {
+                    setArticles(json);
+                });
             } else {
-                if (result.status === 200) {
-                    result.json().then(json => {
-                        setArticles(json);
-                    });
-                } else {
-                    navigate("/E404");
-                }
+                navigate("/E404");
             }
         };
 
@@ -70,10 +68,18 @@ function Community() {
 
     useEffect(() => {
         const fetchProfile = (async () => {
-            const result = await fetch(`${host}/user/mine`, { credentials: "include" });
-            if (result.status == 401 || result.status == 403) navigate("/login");
-            if (result.status == 404) navigate("/E404");
-            result.json().then(data => {
+            var result = await fetch(`${host}/user/mine`, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(`${host}/user/mine`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
+            if (result.status === 404) navigate("/E404");
+            if (result.status === 200) result.json().then(data => {
                 setProfile(data);
             });
         });
@@ -82,10 +88,18 @@ function Community() {
 
     useEffect(() => {
         const fetchProfile = (async () => {
-            const result = await fetch(`${host}/user/mine`, { credentials: "include" });
-            if (result.status == 401 || result.status == 403) navigate("/login");
+            var result = await fetch(`${host}/user/mine`, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(`${host}/user/mine`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
             if (result.status == 404) navigate("/E404");
-            result.json().then(data => {
+            if (result.status === 200) result.json().then(data => {
                 setProfile(data);
             });
         });
@@ -94,10 +108,18 @@ function Community() {
 
     useEffect(() => {
         const fetchProfile = (async () => {
-            const result = await fetch(`${host}/communities/${community_id}`, { credentials: "include" });
-            if (result.status == 401 || result.status == 403) navigate("/login");
+            var result = await fetch(`${host}/communities/${community_id}`, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(`${host}/communities/${community_id}`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
             if (result.status == 404) navigate("/E404");
-            result.json().then(data => {
+            if (result.status === 200) result.json().then(data => {
                 setCommunity(data);
                 document.title = community?.community_name ? community.community_name : "Astroblog";
             });
@@ -107,7 +129,8 @@ function Community() {
 
     const handleUnfollow = (id) => {
         const url = `${host}/communities/unfollow`;
-        axios.post(url, { community: id }, { withCredentials: true }).then(res => {
+        axios.post(url, { community: id }, { withCredentials: true }).then(async res => {
+
             if (res.data.errors) {
                 console.log(res.data.errors);
             }
@@ -120,7 +143,7 @@ function Community() {
 
     const handleFollow = (id) => {
         const url = `${host}/communities/follow`;
-        axios.post(url, { community: id }, { withCredentials: true }).then(res => {
+        axios.post(url, { community: id }, { withCredentials: true }).then(async res => {
             if (res.data.errors) {
                 console.log(res.data.errors);
             }

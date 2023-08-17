@@ -22,10 +22,18 @@ function Settings() {
 
     useEffect(() => {
         const fetchProfile = (async () => {
-            const result = await fetch(`${host}/user/mine`, { credentials: "include" });
-            if (result.status == 401 || result.status == 403) navigate("/login");
+            var result = await fetch(`${host}/user/mine`, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(`${host}/user/mine`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
             if (result.status == 404) navigate("/E404");
-            result.json().then(data => {
+            if (result.status === 200) result.json().then(data => {
                 setProfile(data);
                 setInputs({ "fullname": data.fullname })
             }).catch(e => console.log(e));

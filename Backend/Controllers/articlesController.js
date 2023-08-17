@@ -1,5 +1,6 @@
 const mysql = require("mysql2");
 const env = require("dotenv");
+const logger = require("../Middlewares/winstonLogger");
 env.config();
 
 const pool = mysql.createPool({
@@ -50,16 +51,26 @@ async function createArticle(article, user) {
     const [row1] = await pool.query("INSERT into article (author , community , date_time, title , article_description , article_img , content) values (? , ? ,? ,? ,? , ? , ?) ", [user, article.community, cdate, article.title, article.article_description, article.article_img, article.content]);
     let row2 = undefined;
     if (row1.affectedRows > 0 && fields && fields.length > 0) {
+        logger.http(`user: ${user} has insert in article ${row1.insertId}`);
         const combo = fields.map(f => `('${f}',${row1.insertId})`);
         [row2] = await pool.query("INSERT into field values " + combo.toString(), []);
+    } else {
+        logger.error(`user ${user} has failed inserting in article`);
     }
     let row3 = undefined;
     if ((fields && fields.length > 0 && row2 && row2.affectedRows > 0) || (row2 == undefined && row1 && row1.affectedRows > 0)) {
+        logger.http(`user: ${user} has insert in field`);
         [row3] = await pool.query("UPDATE user set nb_publications = nb_publications + 1 where id = ?", [user]);
+    }
+    if (!row2) {
+        logger.error(`user ${user} has failed inserting in field`);
     }
     let row35 = undefined;
     if (row3 && row3.affectedRows > 0) {
+        logger.http(`user: ${user} has update his nb_publications`);
         [row35] = await pool.query("SELECT community_name from community where id = ?", article.community);
+    } else {
+        logger.error(`user: ${user} has failed updating his nb_publications`);
     }
     let row4 = undefined;
     if (row35 && row35.length > 0) {
@@ -69,8 +80,13 @@ async function createArticle(article, user) {
     }
     let row5 = undefined;
     if (row4 && row4.affectedRows > 0) {
+        logger.http(`user: ${user} , insertion of notifications`);
         [row5] = await pool.query("INSERT INTO user_notif (id_user,id_notif) select id , ? from user where id != ? and id in (select id_user from user_community where id_community = ?)", [row4.insertId, user, article.community]);
+    } else {
+        logger.error(`user ${user} , insertion in notification has failed`);
     }
+    if (!row5) logger.error(`user ${user} , insertion in user_notification as failed`);
+
     return row5 ? row5 : row4 ? row4 : row3 ? row3 : row2 ? row2 : row1;
 }
 
@@ -83,28 +99,42 @@ async function updateLikes(id, user, params) {
     }
     let row2 = undefined;
     if (row1 && row1.affectedRows > 0) {
+        logger.http(`user: ${user} has like/unlike the article ${id}`);
         if (params.action === "increase") {
             [row2] = await pool.query("UPDATE user set nb_likes = nb_likes +1 where fullname =? ", [params.author]);
         } else {
             [row2] = await pool.query("UPDATE user set nb_likes = nb_likes -1 where fullname =? ", [params.author]);
         }
+    } else {
+        logger.error(`user: ${user} has failed liking/unliking the article ${id}`);
     }
     let row3 = undefined;
     if (row2 && row2.affectedRows > 0) {
+        logger.http(`user: ${user}, nb_likes of ${params.author} has changed`);
         if (params.action === "increase") {
             [row3] = await pool.query("UPDATE community set nb_likes = nb_likes +1 where community_name = ?", [params.community]);
         } else {
             [row3] = await pool.query("UPDATE community set nb_likes = nb_likes -1 where community_name = ?", [params.community]);
 
         }
+    } else {
+        logger.error(`user: ${user}, nb_likes of ${params.author} has failed to change`);
     }
     let row4 = undefined;
     if (row3 && row3.affectedRows > 0) {
+        logger.http(`user: ${user}, nb_likes of community ${params.community} has changed`);
         if (params.action === "increase") {
             [row4] = await pool.query("INSERT INTO user_likes_article (user , article) value (?,?)", [user, id]);
         } else {
             [row4] = await pool.query("DELETE from user_likes_article where article = ? and user = ?", [id, user])
         }
+    } else {
+        logger.error(`user: ${user}, nb_likes of community ${params.community} has failed to change`);
+    }
+    if (row4) {
+        logger.http(`user: ${user} had liked/unliked the article ${id}`);
+    } else {
+        logger.error(`user: ${user} had failed to like/unlike the article ${id}`);
     }
     return row4 ? row4 : row3 ? row3 : row2 ? row2 : row1;
 }
@@ -125,11 +155,19 @@ async function updateDislikes(id, user, params) {
 
     let row4 = undefined;
     if (row1 && row1.affectedRows > 0) {
+        logger.http(`user: ${user}, nb_dislikes of the article ${id} has changed`);
         if (params.action === "increase") {
             [row4] = await pool.query("INSERT INTO user_dislikes_article (user , article) value (?,?)", [user, id]);
         } else {
             [row4] = await pool.query("DELETE from user_dislikes_article where article = ? and user = ?", [id, user])
         }
+    } else {
+        logger.error(`user: ${user}, nb_dislikes of the article ${id} has failed to change`);
+    }
+    if (row4) {
+        logger.http(`user: ${user} has disliked/undisliked the article ${id}`);
+    } else {
+        logger.error(`user: ${user} has failed disliking/undisliking the article ${id}`);
     }
     return row4 ? row4 : row1;
 }

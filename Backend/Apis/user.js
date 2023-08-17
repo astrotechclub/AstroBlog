@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { getUserProfile, updateUser, updateUserPicture } = require("../Controllers/usersControllers");
+const { getUserProfile, updateUser, updateUserPicture, getUserProfileByName } = require("../Controllers/usersControllers");
 const validateInputs = require("../Middlewares/validateInputs");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const upload = multer({ dest: "AllPictures" });
 const fs = require("fs");
 const path = require("path");
+const logger = require("../Middlewares/winstonLogger");
 
 router.route("/mine")
     .get(async (req, res, next) => {
@@ -69,7 +70,7 @@ router.route("/updatePicture")
                             });
                             return res.status(200).send('ok');
                         } catch (err) {
-                            console.error('Error deleting file:', err);
+                            logger.error("error while deleting file");
                             return res.status(500).send('Internal Server Error');
                         }
                     }
@@ -80,8 +81,8 @@ router.route("/updatePicture")
 
 router.route("/:id")
     .get(async (req, res, next) => {
-        const id = req.params.id;
-        const result = await getUserProfile(id);
+        const name = req.params.id;
+        const result = await getUserProfileByName(name);
         if (result.length !== 1) {
             return res.sendStatus(404);
         } else {

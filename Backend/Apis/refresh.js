@@ -24,7 +24,7 @@ router.route("/")
                             { expiresIn: process.env.ACCESS_TOKEN_EXPIRE_TIME }
                         );
                         res.cookie('token', accessToken, { httpOnly: true, maxAge: parseInt(process.env.ACCESS_TOKEN_EXPIRE_TIME_IN_MS) });
-                        return res.status(200);
+                        return res.status(200).send("ok");
                     }
                 }
             );

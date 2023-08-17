@@ -2,6 +2,7 @@ const mysql = require("mysql2");
 const env = require("dotenv");
 const bcrypt = require("bcrypt");
 const uuid = require("uuid");
+const logger = require("../Middlewares/winstonLogger");
 
 env.config();
 
@@ -33,7 +34,10 @@ async function addNewUser(user) {
     const [result] = await pool.query(sql, inputs);
     let row2 = undefined;
     if (result && result.affectedRows > 0) {
+        logger.http(`New user has been inserted with id: ${id}`);
         row2 = followAstrotech(id);
+    } else {
+        logger.error(`failed inserting a new user`);
     }
     return row2 ? row2 : result;
 }
@@ -42,7 +46,15 @@ async function followAstrotech(id) {
     const [row2] = await pool.query("INSERT INTO user_community (id_user , id_community) values (? ,?)", [id, 1]);
     let row3 = undefined;
     if (row2 && row2.affectedRows > 0) {
+        logger.http(`user: ${id} has followed the community 1`);
         [row3] = await pool.query("UPDATE community set nb_followers = nb_followers +1 where id = ?", [1]);
+    } else {
+        logger.error(`user: ${id} has failed to follow the community 1`);
+    }
+    if (row3) {
+        logger.http(`user: ${id}, nb_followers of the community 1 has increased`);
+    } else {
+        logger.error(`user: ${user}, nb_followers of the community 1 has failed to increase`);
     }
     return row3 ? row3 : row2
 }
@@ -77,6 +89,11 @@ async function getUserProfile(id) {
     return res;
 }
 
+async function getUserProfileByName(name) {
+    const [res] = await pool.query("SELECT fullname ,email, profile_pic as img , bio , nb_publications as publications , nb_likes as likes from user where fullname = ?", [name]);
+    return res;
+}
+
 async function updateUser(id, inputs) {
     let sql = "";
     let params = [inputs.fullname];
@@ -104,6 +121,11 @@ async function updateUser(id, inputs) {
     if (sql) {
         params = [...params, id];
         [row] = await pool.query(sql, params);
+        if (row) {
+            logger.http(`user: ${id} has updated his infos with success`);
+        } else {
+            logger.error(`user: ${id} has failed to update his infos`);
+        }
     }
     return row;
 }
@@ -122,8 +144,13 @@ async function updateUserPicture(id, picture) {
     const [old_picture] = await pool.query("SELECT profile_pic from user where id = ?", [id]);
     if (old_picture && old_picture.length > 0) {
         const [row] = await pool.query("UPDATE user set profile_pic = ? where id = ?", [picture, id]);
+        if (row) {
+            logger.http(`user: ${id} has updated his picture`);
+        } else {
+            logger.error(`user: ${id} has failed to update his picture`);
+        }
     }
     return old_picture.length > 0 ? old_picture[0].profile_pic : undefined;
 }
 
-module.exports = { addNewUser, emailExists, getPassword, getUserId, setRefreshToken, refreshTokenExists, updateRefreshToken, getUserProfile, updateUser, isMyEmail, getPasswordById, updateUserPicture };
+module.exports = { addNewUser, emailExists, getPassword, getUserId, setRefreshToken, refreshTokenExists, updateRefreshToken, getUserProfile, updateUser, isMyEmail, getPasswordById, updateUserPicture, getUserProfileByName };

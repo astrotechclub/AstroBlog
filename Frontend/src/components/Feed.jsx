@@ -29,16 +29,16 @@ function Feed({ articles, maxArticlesPerPage, setArticles, isProfile, picturesUr
                 if (data.status === 401 || data.status === 403) {
                     navigate("/login");
                 } else {
-                    navigate("/home");
+                    result = await fetch(`${host}/articles/-${max}`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
                 }
+            }
+            if (result.status === 200) {
+                result.json().then(json => {
+                    setArticles(json);
+                });
             } else {
-                if (result.status === 200) {
-                    result.json().then(json => {
-                        setArticles(json);
-                    });
-                } else {
-                    navigate("/E404");
-                }
+                navigate("/E404");
             }
         };
 

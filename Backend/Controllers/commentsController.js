@@ -1,5 +1,6 @@
 const mysql = require("mysql2");
 const env = require("dotenv");
+const logger = require("../Middlewares/winstonLogger");
 env.config();
 
 const pool = mysql.createPool({
@@ -23,8 +24,16 @@ async function AddComment(user, comment, article) {
     const cdate = new Date(Date.now());
     const [row1] = await pool.query("INSERT into comment (article , user , date_time , comment_text) value (?, ? , ? ,?)", [article, user, cdate, comment.comment_text]);
     let row2 = undefined;
-    if (row1.affectedRows > 0) {
+    if (row1 && row1.affectedRows > 0) {
+        logger.http(`user: ${user} has commented the article ${article}`);
         [row2] = await pool.query("UPDATE article set nb_comments = nb_comments +1 where id = ?", [article]);
+    } else {
+        logger.error(`user: ${user} has failed to comment the article ${article}`);
+    }
+    if (row2) {
+        logger.http(`user: ${user}, nb_comments of the article ${comment} has increased`);
+    } else {
+        logger.error(`user: ${user}, nb_comments of the article ${comment} has failed to increase`);
     }
     return row2 ? row2 : row1;
 }

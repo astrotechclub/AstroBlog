@@ -14,7 +14,16 @@ function Contacts({ picturesUrl, host }) {
     useEffect(() => {
         const fetchMyCommunites = async () => {
             const url = `${host}/communities/following/mine`;
-            const result = await fetch(url, { credentials: "include" });
+            var result = await fetch(url, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(url, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
             if (result.status == 200) {
                 result.json().then(json => setMyCommunities(json));
             }
@@ -28,7 +37,16 @@ function Contacts({ picturesUrl, host }) {
     useEffect(() => {
         const fetchMyCommunites = async () => {
             const url = `${host}/communities/suggestions/mine`;
-            const result = await fetch(url, { credentials: "include" });
+            var result = await fetch(url, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(url, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
             if (result.status == 200) {
                 result.json().then(json => setSuggestions(json));
             } else {

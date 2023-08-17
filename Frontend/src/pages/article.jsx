@@ -43,10 +43,22 @@ function Article() {
         window.addEventListener('resize', handleResize);
         handleResize();
         const fetchProfile = (async () => {
-            const result = await fetch(`${host}/user/mine`, { credentials: "include" });
-            result.json().then(data => {
-                setProfile(data); document.title = "New article ✨";
-            });
+            var result = await fetch(`${host}/user/mine`, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(`${host}/user/mine`, { credentials: "include" });
+                }
+            }
+            if (result.status === 200) {
+                result.json().then(data => {
+                    setProfile(data); document.title = "New article ✨";
+                });
+            } else {
+                navigate("/E404");
+            }
         });
         fetchProfile();
         return () => {
@@ -68,7 +80,7 @@ function Article() {
                 if (data.status === 401 || data.status === 403) {
                     navigate("/login");
                 } else {
-                    result = await fetch(`${host}/articles`, { credentials: "include" });
+                    result = await fetch(`${host}/articles/${articleId}`, { credentials: "include" });
                     if (result.status !== 200) navigate("/login");
                 }
             }
@@ -81,10 +93,19 @@ function Article() {
 
     useEffect(() => {
         const fetchComments = async () => {
-            const result = await fetch(`${host}/comments/${articleId}-${max}`, { credentials: "include" });
-            if (result.status == 401 || result.status == 403) navigate("/login");
-            if (result.status == 404) navigate("/E404");
-            result.json().then(json => {
+            var result = await fetch(`${host}/comments/${articleId}-${max}`, { credentials: "include" });
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(`${host}/comments/${articleId}-${max}`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
+            if (result.status === 404) navigate("/E404");
+
+            if (result.status === 200) result.json().then(json => {
                 setComments(json);
                 document.title = json.title;
             });
@@ -109,15 +130,22 @@ function Article() {
 
     useEffect(() => {
         const fetchComments = async () => {
-            const result = await fetch(`${host}/comments/${articleId}-${max}`, { credentials: "include" });
+            let result = await fetch(`${host}/comments/${articleId}-${max}`, { credentials: "include" });
             setIsLoading(false);
-            if (result.status === 404 || result.status === 400) {
-                navigate("/E404");
-            } else {
+            if (result.status === 401 || result.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
+                    navigate("/login");
+                } else {
+                    result = await fetch(`${host}/comments/${articleId}-${max}`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
+                }
+            }
+            if (result.status === 200) {
                 result.json().then(json => {
                     setComments(json);
                     document.title = json.title;
-                })
+                });
             }
         };
         if (max > maxComments) fetchComments();
@@ -140,9 +168,9 @@ function Article() {
                             <div className="col-span-3 flex flex-row justify-start  items-center gap-4">
                                 <div className={`relative ${screenSize === "small" ? "w-[140px]" : null}`}>
                                     <img src={picturesUrl + article.community_profile} alt="community" className="h-[55px] w-[55px] rounded-full object-cover cursor-pointer" onClick={() => navigate(`/community/${article.community_id}`)} />
-                                    <img src={picturesUrl + article.user_profile} alt="author" className="h-[20px] w-[20px] rounded-full absolute bottom-0 right-0 object-cover cursor-pointer" onClick={() => navigate(`/profile/${article.user_id}`)} />
+                                    <img src={picturesUrl + article.user_profile} alt="author" className="h-[20px] w-[20px] rounded-full absolute bottom-0 right-0 object-cover cursor-pointer" onClick={() => navigate(`/profile/${article.user_name}`)} />
                                 </div>
-                                <div className=" flex flex-col gap-1 justify-start items-start cursor-pointer" onClick={() => navigate(`/profile/${article.user_id}`)}>
+                                <div className=" flex flex-col gap-1 justify-start items-start cursor-pointer" onClick={() => navigate(`/profile/${article.user_name}`)}>
                                     <span className="block text-small-subtitle font-semibold">{article.user_name} | {article.community_name}</span>
                                     <span className="block text-mini-text text-subtitle font-medium">{article.user_publications} publications, {article.user_likes} likes</span>
                                 </div>
