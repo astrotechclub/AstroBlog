@@ -14,6 +14,8 @@ const home = require("./Apis/home")
 const user = require("./Apis/user");
 const picture = require("./Apis/picture");
 const notification = require("./Apis/notification");
+const expressWinston = require("express-winston");
+const logger = require("./Middlewares/winstonLogger");
 
 const { Client } = require('@elastic/elasticsearch');
 
@@ -47,6 +49,11 @@ app.use("/home", home);
 app.use("/user", user);
 app.use("/picture", picture);
 app.use("/notification", notification);
+
+app.use(expressWinston.logger({
+  winstonInstance: logger,
+  statusLevels: true
+}))
 
 app.get("/", (req, res) => {
   res.status(200).send("ok");
