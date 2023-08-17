@@ -140,9 +140,9 @@ function Article() {
                             <div className="col-span-3 flex flex-row justify-start  items-center gap-4">
                                 <div className={`relative ${screenSize === "small" ? "w-[140px]" : null}`}>
                                     <img src={picturesUrl + article.community_profile} alt="community" className="h-[55px] w-[55px] rounded-full object-cover cursor-pointer" onClick={() => navigate(`/community/${article.community_id}`)} />
-                                    <img src={picturesUrl + article.user_profile} alt="author" className="h-[20px] w-[20px] rounded-full absolute bottom-0 right-0 object-cover cursor-pointer" onClick={() => navigate(`/profile/${article.user_id}`)} />
+                                    <img src={picturesUrl + article.user_profile} alt="author" className="h-[20px] w-[20px] rounded-full absolute bottom-0 right-0 object-cover cursor-pointer" onClick={() => navigate(`/profile/${article.user_name}`)} />
                                 </div>
-                                <div className=" flex flex-col gap-1 justify-start items-start cursor-pointer" onClick={() => navigate(`/profile/${article.user_id}`)}>
+                                <div className=" flex flex-col gap-1 justify-start items-start cursor-pointer" onClick={() => navigate(`/profile/${article.user_name}`)}>
                                     <span className="block text-small-subtitle font-semibold">{article.user_name} | {article.community_name}</span>
                                     <span className="block text-mini-text text-subtitle font-medium">{article.user_publications} publications, {article.user_likes} likes</span>
                                 </div>

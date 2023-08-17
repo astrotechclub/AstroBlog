@@ -21,7 +21,7 @@ function Followers({ community, host, picturesUrl }) {
     }, []);
     const createFollowers = () => {
         return users.map(function (user) {
-            return <div key={user.id + "_followers"} className="flex flex-row items-center justify-start gap-2 cursor-pointer" onClick={() => navigate(`/profile/${user.id}`)}>
+            return <div key={user.id + "_followers"} className="flex flex-row items-center justify-start gap-2 cursor-pointer" onClick={() => navigate(`/profile/${user.fullname}`)}>
                 <img src={picturesUrl + user.profile_pic} alt="community" className="h-[40px] w-[40px] rounded-full object-cover" />
                 <div className="block">
                     <span className="block text-small-subtitle text-white font-semibold">{user.fullname}</span>

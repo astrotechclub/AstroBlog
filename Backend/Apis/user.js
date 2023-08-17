@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getUserProfile, updateUser, updateUserPicture } = require("../Controllers/usersControllers");
+const { getUserProfile, updateUser, updateUserPicture, getUserProfileByName } = require("../Controllers/usersControllers");
 const validateInputs = require("../Middlewares/validateInputs");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
@@ -81,8 +81,8 @@ router.route("/updatePicture")
 
 router.route("/:id")
     .get(async (req, res, next) => {
-        const id = req.params.id;
-        const result = await getUserProfile(id);
+        const name = req.params.id;
+        const result = await getUserProfileByName(name);
         if (result.length !== 1) {
             return res.sendStatus(404);
         } else {

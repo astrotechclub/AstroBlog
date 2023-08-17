@@ -89,6 +89,11 @@ async function getUserProfile(id) {
     return res;
 }
 
+async function getUserProfileByName(name) {
+    const [res] = await pool.query("SELECT fullname ,email, profile_pic as img , bio , nb_publications as publications , nb_likes as likes from user where fullname = ?", [name]);
+    return res;
+}
+
 async function updateUser(id, inputs) {
     let sql = "";
     let params = [inputs.fullname];
@@ -148,4 +153,4 @@ async function updateUserPicture(id, picture) {
     return old_picture.length > 0 ? old_picture[0].profile_pic : undefined;
 }
 
-module.exports = { addNewUser, emailExists, getPassword, getUserId, setRefreshToken, refreshTokenExists, updateRefreshToken, getUserProfile, updateUser, isMyEmail, getPasswordById, updateUserPicture };
+module.exports = { addNewUser, emailExists, getPassword, getUserId, setRefreshToken, refreshTokenExists, updateRefreshToken, getUserProfile, updateUser, isMyEmail, getPasswordById, updateUserPicture, getUserProfileByName };

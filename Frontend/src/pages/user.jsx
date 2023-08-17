@@ -22,8 +22,6 @@ function Profile() {
     const maxArticlesPerPage = 3;
     const navigate = useNavigate();
     const user_id = useParams().id;
-    if (isNaN(user_id)) navigate("/E404");
-
 
     useEffect(() => {
         const fetchArticles = async () => {
