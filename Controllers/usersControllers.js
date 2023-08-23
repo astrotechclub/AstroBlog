@@ -1,9 +1,12 @@
 const mysql = require("mysql2");
 const env = require("dotenv");
 const bcrypt = require("bcrypt");
+<<<<<<< HEAD
+=======
 const uuid = require("uuid");
 const logger = require("../Middlewares/winstonLogger");
 
+>>>>>>> 681f798744040e6b1c13d0c20b3179b5b558866e
 env.config();
 
 const user = process.env.ELASTICSEARCH_USERNAME
@@ -47,19 +50,13 @@ async function addNewUser(user) {
         inputs.push(user.email, user.fullname, user.about, user.other, password);
         const detail = user.details
     } else {
-        sql = "INSERT INTO user (id,email,fullname,category,user_password) values (?,?,?,?,?)";
-        inputs.push(user.email, user.fullname, user.about, password);
+<<<<<<< HEAD
         const detail = ""
+        sql = "INSERT INTO user (email,fullname,is_admin,category,user_password) values (?,?,0,?,?)";
+        inputs.push(user.email, user.fullname, user.about, password);
     }
     const [result] = await pool.query(sql, inputs);
-    let row2 = undefined;
-    if (result && result.affectedRows > 0) {
-        logger.http(`New user has been inserted with id: ${id}`);
-        row2 = followAstrotech(id);
-    } else {
-        logger.error(`failed inserting a new user`);
-    }
-
+    const id = getUserId(user.email)
     await client.index({
         index: indexUsers,
         body: {
@@ -69,7 +66,22 @@ async function addNewUser(user) {
         }
       })
     await client.indices.refresh({ index: indexUsers }) 
+    const row2 = followAstrotech(result);
+    return row2;
+=======
+        sql = "INSERT INTO user (id,email,fullname,category,user_password) values (?,?,?,?,?)";
+        inputs.push(user.email, user.fullname, user.about, password);
+    }
+    const [result] = await pool.query(sql, inputs);
+    let row2 = undefined;
+    if (result && result.affectedRows > 0) {
+        logger.http(`New user has been inserted with id: ${id}`);
+        row2 = followAstrotech(id);
+    } else {
+        logger.error(`failed inserting a new user`);
+    }
     return row2 ? row2 : result;
+>>>>>>> 681f798744040e6b1c13d0c20b3179b5b558866e
 }
 
 async function followAstrotech(id) {
