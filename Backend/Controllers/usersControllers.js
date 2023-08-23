@@ -1,8 +1,25 @@
 const mysql = require("mysql2");
 const env = require("dotenv");
 const bcrypt = require("bcrypt");
-
 env.config();
+
+const user = process.env.ELASTICSEARCH_USERNAME
+const psw = process.env.ELASTICSEARCH_PASSWORD 
+
+const { Client } = require('@elastic/elasticsearch');
+const client = new Client({ node: 'https://localhost:9200',
+    auth: {
+        username: user,
+        password: psw
+    },
+    ssl: {
+        rejectUnauthorized: false,
+    }, 
+    tls: { rejectUnauthorized: false }});
+
+
+
+const indexUsers = process.env.ELASTICSEARCH_INDEXUSER
 
 const pool = mysql.createPool({
     host: process.env.DATABASE_HOST,
@@ -24,11 +41,23 @@ async function addNewUser(user) {
     if (user.details) {
         sql = "INSERT INTO user (email,fullname,is_admin,category, details) values (?,?,0,?,?,?)";
         inputs.push(user.email, user.fullname, user.about, user.other, password);
+        const detail = user.details
     } else {
+        const detail = ""
         sql = "INSERT INTO user (email,fullname,is_admin,category,user_password) values (?,?,0,?,?)";
         inputs.push(user.email, user.fullname, user.about, password);
     }
     const [result] = await pool.query(sql, inputs);
+    const id = getUserId(user.email)
+    await client.index({
+        index: indexUsers,
+        body: {
+            iduser: id,
+            fullname: user.fullname,
+            details: detail
+        }
+      })
+    await client.indices.refresh({ index: indexUsers }) 
     const row2 = followAstrotech(result);
     return row2;
 }

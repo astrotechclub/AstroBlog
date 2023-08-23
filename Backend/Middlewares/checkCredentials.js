@@ -4,6 +4,7 @@ const { emailExists, getPassword } = require("../Controllers/usersControllers");
 
 const checkCredentials = async (req, res, next) => {
     if (!req.body.email || !req.body.password) {
+        console.log(req.body)
         res.status(403).send("Password or email is empty!");
     } else {
         const email = req.body.email;

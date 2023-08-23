@@ -38,7 +38,7 @@ app.use(cookieParser());
 app.use("/register", signup);
 app.use("/login", login);
 app.use("/refresh", refresh);
-app.use(verifyJWT);
+//app.use(verifyJWT);
 app.use("/articles", articles);
 app.use("/comments", comments);
 app.use("/communities", communities);
@@ -52,7 +52,8 @@ app.get("/", (req, res) => {
   res.status(200).send("ok");
 });
 
-const indexName = process.env.ELASTICSEARCH_INDEX;
+const indexName = process.env.ELASTICSEARCH_INDEX
+const indexUsers = process.env.ELASTICSEARCH_INDEXUSER 
 const userelastic = process.env.ELASTICSEARCH_USERNAME
 const psw = process.env.ELASTICSEARCH_PASSWORD
 
@@ -67,6 +68,16 @@ const client = new Client({
   },
   tls: { rejectUnauthorized: false }
 });
+
+(async () => {
+  try {
+    await client.indices.delete({index: indexUsers});
+    console.log(`Index "${indexUsers}" cd.`);
+  } catch (error) {
+    console.error('Error creating the index: Already exist');
+  }
+})();
+
 
 
 (async () => {
@@ -88,6 +99,25 @@ const client = new Client({
   }
 })();
 
+(async () => {
+  try {
+    await client.indices.create({
+      index: indexUsers,
+      body: {
+        mappings: {
+          properties: {
+            fullname: { type: 'text' },
+            iduser: { type: 'integer' },
+            details: { type: 'text' },
+          },
+        },
+      },
+    });
+    console.log(`Index "${indexUsers}" created.`);
+  } catch (error) {
+    console.error('Error creating the index: Already exist');
+  }
+})();
 
 async function run() {
   await client.index({
@@ -114,8 +144,17 @@ async function run() {
     }
   })
 
-  await client.indices.refresh({ index: indexName })
-  console.log('ook')
+  await client.index({
+    index: indexUsers,
+    body: {
+      iduser: 1,
+      fullname: "kamel",
+      details: "detail",
+    }
+  })
+
+  await client.indices.refresh({ index: indexUsers })
+  
 }
 
 //run().catch(console.log)

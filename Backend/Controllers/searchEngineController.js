@@ -27,6 +27,7 @@ const client = new Client({ node: 'https://localhost:9200',
 
 
 const indexName = process.env.ELASTICSEARCH_INDEX ;
+const indexUsers = process.env.ELASTICSEARCH_INDEXUSER
 
 const getArticleSearch =  async (param) => {
     try {
@@ -41,13 +42,12 @@ const getArticleSearch =  async (param) => {
             },
           },
         });
-        console.log(res)
         const results = res.hits.hits.sort((a,b)=>{
           if (a["_score"] >= b["_score"]) return 1
           else return -1
         });
         let array = []
-        
+
         for (let i = 0 ; i< results.length; i++){
           console.log(results[i]["_source"]["_title"])
           let rows = await getArticleTitle(results[i]["_source"]["title"])
@@ -67,4 +67,42 @@ const getArticleTitle= async (title) => {
   return rows
 }
 
-module.exports = getArticleSearch
+const getUserSearch = async (param)=> {
+  try {
+    const res = await client.search({
+      index: indexUsers,
+      body: {
+        query: {
+          multi_match: {
+            query: param,
+            fields: ['fullname', 'details'],
+          },
+        },
+      },
+    });
+    const results = res.hits.hits.sort((a,b)=>{
+      if (a["_score"] >= b["_score"]) return 1
+      else return -1
+    });
+
+    let array = []
+    
+    for (let i = 0 ; i< results.length; i++){
+      let rows = await getUserTitle(results[i]["_source"]["iduser"])
+      array = [...array,...rows]
+    }
+
+    return array
+    }
+    catch (error) {
+        console.error('Error processing the search:', error);
+        return null;
+    }
+
+}
+
+const getUserTitle= async (user) => {
+  const [rows] = await pool.query("SELECT * FROM USER WHERE id = ?", [user]);
+  return rows
+}
+module.exports = { getArticleSearch, getUserSearch}

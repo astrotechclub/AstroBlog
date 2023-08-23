@@ -5,11 +5,14 @@ const { addNewUser, getUserId, setRefreshToken } = require("../Controllers/users
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+
+
 router.route("/")
     .post(async (req, res, next) => {
         const user = req.body;
         const result = await addNewUser(user);
         if (result.affectedRows > 0) {
+            
             // add entry in log file
             const tmp = await getUserId(user.email);
             const userId = tmp.id;

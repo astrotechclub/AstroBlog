@@ -1,15 +1,16 @@
 const express = require("express");
-const getArticleSearch = require("../Controllers/searchEngineController");
+const searchEngineController= require("../Controllers/searchEngineController");
 const router = express.Router();
 
 
 
 router.route("/").get(async (req, res) => {
     const search = req.query
-    console.log("ss")
     if (search) {
         const param = search.search
-        const results = await getArticleSearch(param)
+        const results = {}
+        results.article = await searchEngineController.getArticleSearch(param)
+        results.user = await searchEngineController.getUserSearch(param)
         if (results) {
             res.status(200).json(results)
         }
