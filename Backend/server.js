@@ -96,34 +96,26 @@ const client = new Client({
 })();
 
 
-async function run() {
-  await client.index({
-    index: indexName,
-    body: {
-      title: 'Ned Stark',
-      content: 'Winter is coming.'
-    }
-  })
 
-  await client.index({
-    index: indexName,
-    body: {
-      title: 'Daenerys Targaryen',
-      content: 'I am the blood of the dragon.'
-    }
-  })
-
-  await client.index({
-    index: indexName,
-    body: {
-      title: 'Bonjour tous le monde',
-      content: 'this is my description.'
-    }
-  })
-
-  await client.indices.refresh({ index: indexName })
-  console.log('ook')
-}
+(async () => {
+  try {
+    await client.indices.create({
+      index: indexUsers,
+      body: {
+        mappings: {
+          properties: {
+            fullname: { type: 'text' },
+            iduser: { type: 'integer' },
+            details: { type: 'text' },
+          },
+        },
+      },
+    });
+    console.log(`Index "${indexUsers}" created.`);
+  } catch (error) {
+    console.error('Error creating the index: Already exist');
+  }
+})();
 
 //run().catch(console.log)
 

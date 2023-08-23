@@ -103,8 +103,6 @@ async function createArticle(article, user) {
     } else {
         logger.error(`user ${user} , insertion in notification has failed`);
     }
-    if (!row5) logger.error(`user ${user} , insertion in user_notification as failed`);
-
 
     await client.index({
         index: indexName,
@@ -113,7 +111,10 @@ async function createArticle(article, user) {
           content: article.article_description
         }
       })
-    await client.indices.refresh({ index: indexName }) 
+      await client.indices.refresh({ index: indexName }) 
+
+    if (!row5) logger.error(`user ${user} , insertion in user_notification as failed`);
+
     return row5 ? row5 : row4 ? row4 : row3 ? row3 : row2 ? row2 : row1;
 }
 
