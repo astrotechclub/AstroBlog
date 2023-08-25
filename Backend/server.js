@@ -118,9 +118,21 @@ const client = new Client({
 })();
 
 //run().catch(console.log)
+(async () => {
+  try {
+    await client.index({
+      index: indexName,
+      body: {
+        title: "Venus & Jupiter 2023 Conjunction",
+        content: "venus and jupyter"
+      }
+    })
+    await client.indices.refresh({ index: indexName })
 
-
-
+  } catch (e) {
+    console.log(e);
+  }
+})
 
 app.listen(PORT, () => {
   console.log(`server has been started at port ${PORT}`);

@@ -28,6 +28,7 @@ function WriteArticleForm({ host, community }) {
         axios.post(url, inputs, {
             withCredentials: true,
         }).then(res => {
+            console.log(res);
             if (res.data.errors) {
                 console.log(res.data.errors);
             }
