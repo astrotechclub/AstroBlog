@@ -91,7 +91,7 @@ function FeedNavBar({ profile, picturesUrl, host }) {
                 <img src={logo} alt="logo" className="h-10 -rotate-logo" />
                 <span className="logo font-semibold text-sm text-white">Astrotech</span>
             </div>
-            <SearchBar setShowNotification={setShowNotification} />
+            <SearchBar setShowNotification={setShowNotification} host={host} />
             <div className="relative cursor-pointer min-w-[25px]">
                 <img src={bellIcon} alt="bell" className="h-6 w-6" onClick={handleBellClick} />
                 {notify()}

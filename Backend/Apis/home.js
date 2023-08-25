@@ -1,5 +1,5 @@
 const express = require("express");
-const searchEngineController= require("../Controllers/searchEngineController");
+const searchEngineController = require("../Controllers/searchEngineController");
 const router = express.Router();
 
 
@@ -12,10 +12,10 @@ router.route("/").get(async (req, res) => {
         results.article = await searchEngineController.getArticleSearch(param)
         results.user = await searchEngineController.getUserSearch(param)
         if (results) {
-            res.status(200).json(results)
+            res.status(200).json(results);
         }
         else {
-            res.status(400).json({})
+            res.sendStatus(400);
         }
     }
 })
