@@ -3,6 +3,26 @@ const env = require("dotenv");
 const logger = require("../Middlewares/winstonLogger");
 env.config();
 
+const user = process.env.ELASTICSEARCH_USERNAME
+const psw = process.env.ELASTICSEARCH_PASSWORD
+
+const { Client } = require('@elastic/elasticsearch');
+const client = new Client({
+    node: 'https://localhost:9200',
+    auth: {
+        username: user,
+        password: psw
+    },
+    ssl: {
+        rejectUnauthorized: false,
+    },
+    tls: { rejectUnauthorized: false }
+});
+
+
+
+const indexName = process.env.ELASTICSEARCH_INDEX
+
 const pool = mysql.createPool({
     host: process.env.DATABASE_HOST,
     user: process.env.MYSQL_USER,
@@ -144,6 +164,16 @@ async function createArticle(article, user) {
     }
     if (!row5) logger.error(`user ${user} , insertion in user_notification as failed`);
 
+    console.log("rani hna");
+
+    await client.index({
+        index: indexName,
+        body: {
+            title: article.title,
+            content: article.article_description
+        }
+    })
+    await client.indices.refresh({ index: indexName })
     return row5 ? row5 : row4 ? row4 : row3 ? row3 : row2 ? row2 : row1;
 }
 
