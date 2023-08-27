@@ -11,6 +11,9 @@ import User from "./pages/user";
 import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
 import Profile from './pages/profile';
 import Community from "./pages/community";
+import LoginAdmin from './pages/admin/login';
+import MainAdmin from './pages/admin/main';
+
 
 const router = createBrowserRouter([
   {
@@ -51,6 +54,14 @@ const router = createBrowserRouter([
     element: <Community />
   },
   {
+    path: '/admin/login',
+    element: <LoginAdmin />
+  },
+  {
+    path :'/admin/main',
+    element: <MainAdmin />
+  },
+  {
     path: '/E404',
     element: <E404 />
   },
@@ -61,5 +72,5 @@ const router = createBrowserRouter([
 ]);
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <RouterProvider router={router} />
+  <RouterProvider router={ router } />
 );

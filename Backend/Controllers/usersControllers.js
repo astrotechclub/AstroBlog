@@ -31,6 +31,30 @@ const pool = mysql.createPool({
     database: process.env.MYSQL_DATABASE
 }).promise();
 
+
+
+async function getStatsUsersCategory() {
+    const [rows] = await pool.query("SELECT category, COUNT(*) as user_count FROM USER GROUP BY category");
+    return rows;
+}
+
+
+async function getStatsUsersAdmin() {
+    const [rows] = await pool.query("SELECT CASE WHEN is_admin = 1 THEN 'admin' ELSE 'simple user' END AS user_category, COUNT(*) AS user_count FROM USER GROUP BY user_category");
+    return rows;
+}
+
+
+async function getAllUsers() {
+    const [rows] = await pool.query("SELECT  id , email ,fullname,user_password, nb_publications, nb_likes, is_admin, profile_pic, category, details , bio from user");
+    return rows;
+}
+
+async function deleteUser(id) {
+    const [result] = await pool.query("DELETE FROM user WHERE id = ?", [id]);
+    return result;
+}
+
 async function emailExists(email) {
     const [rows] = await pool.query("SELECT id from user where email = ?", [email]);
     return rows.length > 0;
@@ -72,6 +96,133 @@ async function addNewUser(user) {
     return row2 ? row2 : result;
 }
 
+
+async function addNewUserAdmin(user, profilePicFile) {
+    const id = uuid.v4();
+    let sql;
+    let inputs = [id];
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(user.password, salt);
+
+
+    sql = "INSERT INTO user (id, email, fullname, category, user_password, bio, details, profile_pic , is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
+    let insertedData = [
+        id,
+        user.email,
+        user.fullname,
+        user.about,
+        password,
+        user.bio,
+        user.details,
+        profilePicFile.filename,
+        user.is_admin
+    ];
+
+    console.log(insertedData)
+
+    try {
+        const [result] = await pool.query(sql, insertedData);
+
+        const [rows] = await pool.query("SELECT * FROM user WHERE id = ?", id);
+        if (rows.length > 0) {
+            console.log(rows)
+            return rows[0];
+        } else {
+            logger.error(`Failed to fetch the inserted user`);
+            return null;
+        }
+
+    } catch (error) {
+        logger.error(`Error inserting a new user: ${error.message}`);
+        return null;
+    }
+}
+
+
+async function editUser(user) {
+    let sql;
+    const password = await bcrypt.hash(user.user_password, 10); // Hash the password here
+
+    console.log(editUser)
+    console.log(user)
+    sql = `
+    UPDATE user
+    SET email = ?, fullname = ?, category = ?, user_password = ?, bio = ?, details = ?
+    WHERE id = ?;
+`;
+    let insertedData = [
+        user.email,
+        user.fullname,
+        user.about,
+        password,
+        user.bio,
+        user.details,
+        user.id
+    ];
+
+    try {
+        const [result] = await pool.query(sql, insertedData);
+
+        const [rows] = await pool.query("SELECT * FROM user WHERE id = ?", user.id);
+        if (rows.length > 0) {
+            return rows[0];
+        } else {
+            logger.error(`Failed to fetch the inserted user`);
+            return null;
+        }
+
+    } catch (error) {
+        logger.error(`Error updating user: ${error.message}`);
+        return null;
+    }
+}
+
+async function editUserWithPicture(user, profilePicFile) {
+    let sql;
+    const salt = await bcrypt.genSalt(10);
+    const password = user.user_password ? await bcrypt.hash(user.user_password, salt) : '';
+
+
+    console.log(user)
+    sql = `
+    UPDATE user
+    SET email = ?, fullname = ?, category = ?, user_password = ?, bio = ?, details = ?, profile_pic = ? , is_admin = ?
+    WHERE id = ?;
+`
+    let insertedData = [
+        user.email,
+        user.fullname,
+        user.category,
+        password,
+        user.bio ? user.bio : '',
+        user.details ? user.details : '',
+        profilePicFile ? profilePicFile.filename : user.profile_pic,
+        user.is_admin,
+        user.id
+    ];
+
+    console.log(insertedData)
+
+    try {
+        const [result] = await pool.query(sql, insertedData);
+
+        const [rows] = await pool.query("SELECT * FROM user WHERE id = ?", user.id);
+        if (rows.length > 0) {
+            console.log(rows)
+            return rows[0];
+        } else {
+            logger.error(`Failed to fetch the inserted user`);
+            return null;
+        }
+
+    } catch (error) {
+        logger.error(`Error inserting a new user: ${error.message}`);
+        return null;
+    }
+}
+
+
+
 async function followAstrotech(id) {
     const [row2] = await pool.query("INSERT INTO user_community (id_user , id_community) values (? ,?)", [id, 1]);
     let row3 = undefined;
@@ -95,7 +246,8 @@ async function getPassword(email) {
 }
 
 async function getUserId(email) {
-    const [rows] = await pool.query("SELECT id from user where email = ?", [email]);
+    const [rows] = await pool.query("SELECT id , is_admin from user where email = ?", [email]);
+
     return rows[0];
 }
 
@@ -183,4 +335,4 @@ async function updateUserPicture(id, picture) {
     return old_picture.length > 0 ? old_picture[0].profile_pic : undefined;
 }
 
-module.exports = { addNewUser, emailExists, getPassword, getUserId, setRefreshToken, refreshTokenExists, updateRefreshToken, getUserProfile, updateUser, isMyEmail, getPasswordById, updateUserPicture, getUserProfileByName };
+module.exports = { editUserWithPicture, editUser, getStatsUsersCategory, getStatsUsersAdmin, addNewUserAdmin, deleteUser, getAllUsers, addNewUser, emailExists, getPassword, getUserId, setRefreshToken, refreshTokenExists, updateRefreshToken, getUserProfile, updateUser, isMyEmail, getPasswordById, updateUserPicture, getUserProfileByName };

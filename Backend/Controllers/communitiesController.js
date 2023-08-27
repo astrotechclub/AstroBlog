@@ -15,6 +15,49 @@ async function getAllCommunities() {
     return rows;
 }
 
+async function getAllOfCommunities() {
+    const [rows] = await pool.query("SELECT * from community");
+    return rows;
+}
+
+async function createCommunity(community, profile_img) {
+    let insertData = [
+        community.community_name,
+        community.community_description,
+        profile_img.filename
+    ]
+    console.log(insertData)
+    const [result] = await pool.query("INSERT INTO community (community_name, community_description, profile_img) VALUES (?, ?, ?)", insertData);
+    const insertedId = result.insertId;
+    const [rows] = await pool.query("SELECT * FROM COMMUNITY WHERE id = ?", insertedId);
+    return rows[0];
+}
+
+
+async function editCommunity(community, profile_img) {
+    let insertData = [
+        community.community_name,
+        community.community_description,
+        profile_img? profile_img.filename : community.profile_img,
+        community.id
+    ]
+    console.log(insertData)
+    const [result] = await pool.query("UPDATE community SET community_name = ?, community_description = ?, profile_img = ? WHERE id = ?;", insertData);
+    const insertedId = community.id;
+    const [rows] = await pool.query("SELECT * FROM COMMUNITY WHERE id = ?", insertedId);
+    return rows[0];
+}
+
+
+
+
+async function getStatsCommunity() {
+    const [result] = await pool.query("SELECT community_name, nb_followers, nb_likes FROM COMMUNITY");
+    return result;
+}
+
+
+
 async function getCommunity(id, user) {
     let [rows] = await pool.query("SELECT * from community where id = ?", [id]);
     const [row] = await pool.query("SELECT id_user from USER_COMMUNITY where id_user = ? and id_community = ?", [user, id]);
@@ -72,4 +115,10 @@ async function getUsers(id) {
     return rows;
 }
 
-module.exports = { getAllCommunities, getCommunity, getUserCommunities, getUserSuggestions, unfollowCommunity, followCommunity, getUsers };
+
+async function deleteCommunity(id) {
+    const [result] = await pool.query("DELETE FROM community WHERE id = ?", [id]);
+    return result;
+}
+
+module.exports = {editCommunity, getStatsCommunity, createCommunity, deleteCommunity, getAllOfCommunities, getAllCommunities, getCommunity, getUserCommunities, getUserSuggestions, unfollowCommunity, followCommunity, getUsers };

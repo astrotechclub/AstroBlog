@@ -16,14 +16,14 @@ CREATE TABLE IF NOT EXISTS USER(
     bio varchar(255)
 );
 
-CREATE TABLE IF NOT EXISTS COMMUNITY(
-    id int primary key AUTO_INCREMENT,
-    community_name varchar(100) not null,
-    community_description varchar(200),
-    profile_img varchar(40) not null,
-    nb_followers int not null default 0,
-    nb_likes int not null default 0
-);
+    CREATE TABLE IF NOT EXISTS COMMUNITY(
+        id int primary key AUTO_INCREMENT,
+        community_name varchar(100) not null,
+        community_description varchar(200),
+        profile_img varchar(40) not null,
+        nb_followers int not null default 0,
+        nb_likes int not null default 0
+    );
 
 CREATE TABLE IF NOT EXISTS ARTICLE(
     id int primary key AUTO_INCREMENT,
@@ -31,15 +31,16 @@ CREATE TABLE IF NOT EXISTS ARTICLE(
     community int not null,
     title varchar(50) not null,
     article_description varchar(255) not null,
-    date_time datetime not null,
+    date_time datetime default CURRENT_TIMESTAMP, -- Set default value to current timestamp
     article_img varchar(200),
-    nb_comments int not null default 0,
+    nb_comments int not null default 0, 
     nb_likes int not null default 0,
-    nb_dislikes int not null default 0,
+    nb_dislikes int not null default 0, 
     content text not null,
     foreign key (author) references USER (id),
     foreign key (community) references COMMUNITY(id)
 );
+
 
 CREATE TABLE IF NOT EXISTS FIELD(
     field_name varchar(50) not null,

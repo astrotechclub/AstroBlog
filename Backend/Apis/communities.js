@@ -1,15 +1,53 @@
 const express = require("express");
-const { getAllCommunities, getCommunity, getUserCommunities, getUserSuggestions, unfollowCommunity, followCommunity, getUsers } = require("../Controllers/communitiesController");
+const {editCommunity, getStatsCommunity, createCommunity, deleteCommunity, getAllCommunities, getCommunity, getUserCommunities, getUserSuggestions, unfollowCommunity, followCommunity, getUsers, getAllOfCommunities } = require("../Controllers/communitiesController");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const upload = multer({ dest: "AllPictures" });
+const fs = require("fs");
+const path = require("path");
 
 const router = express.Router();
 
+router.route("/stats")
+    .get(async (req, res, next) => {
+        const stats = await getStatsCommunity();
+        return res.send(stats);
+    });
 
 router.route("/")
     .get(async (req, res, next) => {
         const comments = await getAllCommunities();
         return res.send(comments);
     });
+
+router.route("/add")
+    .post(upload.single('profile_img'), async (req, res, next) => {
+        const community = await createCommunity(req.body, req.file);
+        return res.send(community); 
+    });
+
+    router.route("/edit")
+    .put(upload.single('profile_img'), async (req, res, next) => {
+        const community = await editCommunity(req.body, req.file);
+        return res.send(community); 
+    });
+
+
+router.route('/all').get(async (req, res, next) => {
+    const communities = await getAllOfCommunities();
+    return res.send(communities);
+})
+
+
+router.delete('/delete/:id', async (req, res, next) => {
+    try {
+        const user = await deleteCommunity(req.params.id);
+        console.log(req.params.id);
+        return res.json(user);
+    } catch (error) {
+        return next(error);
+    }
+});
 
 router.route("/unfollow")
     .post(async (req, res, next) => {
