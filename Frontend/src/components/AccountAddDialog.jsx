@@ -15,7 +15,8 @@ const AccountAddDialog = ({ isOpen, onClose, setShowAlert, setUsers, setAllUsers
         about: 'esi_student',
         password: '',
         bio: '',
-        details: ''
+        details: '',
+        is_admin:''
     });
 
     const handleInputChange = (event) => {
@@ -46,6 +47,7 @@ const AccountAddDialog = ({ isOpen, onClose, setShowAlert, setUsers, setAllUsers
         formData.append('password', newAccount.password);
         formData.append('bio', newAccount.bio);
         formData.append('details', newAccount.details);
+        formData.append('is_admin' , newAccount.is_admin);
 
         axios.post(`${host}/user/add`, formData, {
             withCredentials: true,
@@ -74,7 +76,8 @@ const AccountAddDialog = ({ isOpen, onClose, setShowAlert, setUsers, setAllUsers
                 about: 'esi_student',
                 password: '',
                 bio: '',
-                details: ''
+                details: '',
+                is_admin:''
             })
             setAlertMessage(`User ${newAccount.fullname} created successfully`)
             setShowAlert(true);
@@ -120,6 +123,28 @@ const AccountAddDialog = ({ isOpen, onClose, setShowAlert, setUsers, setAllUsers
                                 Upload Image
                             </button>
                         </div>
+                    </div>
+                    <div className="w-full  rounded-lg ">
+                        <label htmlFor="select" className="block mb-2 text-sm font-medium text-[#6838ec]">
+                            Select user type
+                        </label>
+                        <select
+                            value={ newAccount.is_admin }
+                            onChange={ handleInputChange }
+                            name='is_admin'
+
+                            className="w-full bg-gray-50 text-gray-900 text-sm  border rounded-lg p-2.5 border-[#6838ec] focus:ring-[#6838ec] focus:border-[#6838ec] outline-none sm:text-sm"
+                        >
+
+
+                            <option class="px-4 py-3 flex items-center font-medium text-gray-900 whitespace-nowrap" value={ 0 }>Not admin
+                            </option>
+                            <option class="px-4 py-3 flex items-center font-medium text-gray-900 whitespace-nowrap" value={ 1 }>
+                                Admin
+                            </option>
+
+
+                        </select>
                     </div>
 
                     <div className="w-full  rounded-lg ">

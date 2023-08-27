@@ -19,7 +19,7 @@ const CommunityEditDialog = ({ group, isOpen, onClose, setCommunities, setShowAl
             setNewGroup(group);
         }
     }, [group]);
-    
+
 
     const handleInputChange = (event) => {
         const { name, value, type } = event.target;
@@ -68,6 +68,8 @@ const CommunityEditDialog = ({ group, isOpen, onClose, setCommunities, setShowAl
             }
 
             const createdCommunity = res.data;
+            setAlertMessage(`Community ${newGroup.community_name} saved successfully`)
+            setShowAlert(true);
 
             const userIndex = communities.findIndex(user => user.id === group.id);
             if (userIndex !== -1) {
@@ -83,14 +85,7 @@ const CommunityEditDialog = ({ group, isOpen, onClose, setCommunities, setShowAl
                 setAllCommunities(updatedUsers);
             }
 
-            setAlertMessage(`Community ${newGroup.community_name} saved successfully`)
-            setNewGroup({
-                community_name: '',
-                profile_img: '',
-                community_description: '',
-                id: ''
-            });
-            setShowAlert(true);
+
         } catch (err) {
             console.log(err);
         }

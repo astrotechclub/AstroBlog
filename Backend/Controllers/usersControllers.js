@@ -75,7 +75,7 @@ async function addNewUserAdmin(user, profilePicFile) {
     const password = await bcrypt.hash(user.password, salt);
 
 
-    sql = "INSERT INTO user (id, email, fullname, category, user_password, bio, details, profile_pic) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    sql = "INSERT INTO user (id, email, fullname, category, user_password, bio, details, profile_pic , is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
     let insertedData = [
         id,
         user.email,
@@ -84,7 +84,8 @@ async function addNewUserAdmin(user, profilePicFile) {
         password,
         user.bio,
         user.details,
-        profilePicFile.filename
+        profilePicFile.filename,
+        user.is_admin
     ];
 
     console.log(insertedData)
@@ -155,7 +156,7 @@ async function editUserWithPicture(user, profilePicFile) {
     console.log(user)
     sql = `
     UPDATE user
-    SET email = ?, fullname = ?, category = ?, user_password = ?, bio = ?, details = ?, profile_pic = ?
+    SET email = ?, fullname = ?, category = ?, user_password = ?, bio = ?, details = ?, profile_pic = ? , is_admin = ?
     WHERE id = ?;
 `
     let insertedData = [
@@ -166,6 +167,7 @@ async function editUserWithPicture(user, profilePicFile) {
         user.bio ? user.bio : '',
         user.details ? user.details : '',
         profilePicFile ? profilePicFile.filename : user.profile_pic,
+        user.is_admin,
         user.id
     ];
 
@@ -214,7 +216,7 @@ async function getPassword(email) {
 }
 
 async function getUserId(email) {
-    const [rows] = await pool.query("SELECT id from user where email = ?", [email]);
+    const [rows] = await pool.query("SELECT id , is_admin from user where email = ?", [email]);
 
     return rows[0];
 }

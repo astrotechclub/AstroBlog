@@ -144,7 +144,7 @@ const AccountsManagement = () => {
                                     setAllUsers={ setAllUsers }
                                 />
 
-                                <ActionsFilters />
+                                {/* <ActionsFilters /> */}
                             </div>
                         </div>
                         <div class="overflow-x-auto">

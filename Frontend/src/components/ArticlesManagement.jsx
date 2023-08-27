@@ -141,7 +141,7 @@ const ArticlesManagement = () => {
                                     setAllArticles={ setAllArticles }
                                 />
 
-                                <ActionsFilters />
+                                {/* <ActionsFilters /> */}
                             </div>
                         </div>
                         <div class="overflow-x-auto">

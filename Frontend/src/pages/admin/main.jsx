@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import logo from '../../assets/logo.svg';
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
-import { motion,useAnimation } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import { VscAccount } from 'react-icons/vsc'
 import { PiArticleMediumBold } from 'react-icons/pi'
 import { BiCommentDetail } from 'react-icons/bi'
@@ -17,20 +17,10 @@ import ArticlesStatistics from '../../components/ArticlesStatistics';
 import CommentsStatistics from '../../components/CommentsStatistics';
 import CommunityManagement from '../../components/CommunityManagement';
 import CommunityStatistics from '../../components/CommunityStatistics';
-import {
-    Tabs,
-    TabsHeader,
-    TabsBody,
-    Tab,
-    TabPanel,
-} from "@material-tailwind/react";
+import { RiLogoutCircleRLine } from 'react-icons/ri'
 
 
 const MainAdmin = () => {
-
-    const [articles, setArticles] = useState([]);
-    const [comments, setComments] = useState([]);
-
 
     const host = "http://localhost:5000";
     const picturesUrl = `${host}/picture/`;
@@ -39,7 +29,22 @@ const MainAdmin = () => {
     const [activeTab, setActiveTab] = useState('accounts');
     const [statsOrData, setStatsOrData] = useState('data');
     const controls = useAnimation();
-    
+    const [profile, setProfile] = useState({})
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    const toggleDropdown = () => {
+        setShowDropdown(!showDropdown);
+    };
+
+    const handleLogout = async () => {
+        const res = await fetch(`${host}/logout`, { credentials: "include" });
+        if (res.status == 401 || res.status == 403) navigate("/login");
+        if (res.status == 404) navigate("/E404");
+        if (res.status === 200) {
+            navigate("/login");
+        }
+    };
+
 
     const handleTabClick = (tab) => {
         setActiveTab(tab);
@@ -53,28 +58,25 @@ const MainAdmin = () => {
 
 
     useEffect(() => {
-        const fetchArticles = async () => {
-            var result = await fetch(`${host}/articles/-${maxArticlesPerPage}`, { credentials: "include" });
+        const fetchProfile = (async () => {
+            var result = await fetch(`${host}/user/mine`, { credentials: "include" });
             if (result.status === 401 || result.status === 403) {
-                const data = await fetch(`${host}/refresh`, { credentials: "include" });
-                if (data.status === 401 || data.status === 403) {
+                result = await fetch(`${host}/refresh`, { credentials: "include" });
+                if (result.status === 401 || result.status === 403) {
                     navigate("/login");
                 } else {
-                    navigate("/home");
-                }
-            } else {
-                if (result.status === 200) {
-                    result.json().then(json => {
-                        setArticles(json);
-                    });
-                } else {
-                    navigate("/E404");
+                    result = await fetch(`${host}/user/mine`, { credentials: "include" });
+                    if (result.status !== 200) navigate("/login");
                 }
             }
-        };
-
-        //fetchArticles();
-
+            if (result.status == 404) navigate("/E404");
+            if (result.status === 200) result.json().then(data => {
+                setProfile(data);
+                document.title = profile?.fullname ? profile.fullname : "Astroblog";
+            });
+        });
+        fetchProfile();
+        console.log(profile)
     }, []);
 
 
@@ -166,7 +168,29 @@ const MainAdmin = () => {
                                 <span class='slider rounded' />
                             </label>
                         </div>
-                        <div className='col-span-1 h-full flex flex-row justify-center items-center'>Profil</div>
+                        <div className='col-span-1 h-full flex flex-col gap-4 justify-center items-center relative'>
+                            <img
+                                className='h-12 w-12 shadow-xl rounded-full cursor-pointer'
+                                src={ picturesUrl + profile.img }
+                                alt='Profile'
+                                onClick={ toggleDropdown }
+                            />
+
+                            { showDropdown && (
+                                <div onClick={ handleLogout } className='hover:bg-gray-100 hover:cursor-pointer absolute top-14 right-0 mt-1 bg-white border rounded-lg shadow-lg px-2.5 py-1 border-[#7e4efc]'>
+                                    <div className='flex flex-row justify-between gap-4 items-center'>
+                                        
+                                        <button
+                                            className='block w-full text-left   text-gray-800 '
+                                            onClick={ handleLogout }
+                                        >
+                                            Logout
+                                        </button>
+                                        <RiLogoutCircleRLine className='w-8 h-8'/>
+                                    </div>
+                                </div>
+                            ) }
+                        </div>
                     </div>
 
                     <div className='rows-cols-8 w-full h-[85vh] overflow-y-scroll'>

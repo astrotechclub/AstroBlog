@@ -10,10 +10,11 @@ const AccountEditDialog = ({ selectedUser, isOpen, onClose, setShowAlert, setUse
         fullname: '',
         email: '',
         category: 'esi_student',
-        profile_pic : '',
+        profile_pic: '',
         user_password: '',
         bio: '',
         details: '',
+        is_admin: ''
     });
 
     useEffect(() => {
@@ -53,6 +54,7 @@ const AccountEditDialog = ({ selectedUser, isOpen, onClose, setShowAlert, setUse
         formData.append('user_password', newAccount.user_password);
         formData.append('bio', newAccount.bio);
         formData.append('details', newAccount.details);
+        formData.append('is_admin', newAccount.is_admin)
         formData.append('id', newAccount.id);
 
         axios.put(`${host}/user/editUser`, formData, {
@@ -75,6 +77,9 @@ const AccountEditDialog = ({ selectedUser, isOpen, onClose, setShowAlert, setUse
             setNewAccount(res.data);
             console.log(res.data)
 
+            setAlertMessage(`User ${newAccount.fullname} edited successfully`)
+            setShowAlert(true);
+
             const userIndex = users.findIndex(user => user.id === selectedUser.id);
             if (userIndex !== -1) {
                 const updatedUsers = [...users];
@@ -89,8 +94,7 @@ const AccountEditDialog = ({ selectedUser, isOpen, onClose, setShowAlert, setUse
                 setAllUsers(updatedUsers);
             }
 
-            setAlertMessage(`User ${newAccount.fullname} edited successfully`)
-            setShowAlert(true);
+
         }).catch(err => {
             console.log(err);
         });
@@ -157,6 +161,28 @@ const AccountEditDialog = ({ selectedUser, isOpen, onClose, setShowAlert, setUse
                         <label for="last_name" class="text-[#6838ec] block mb-2 text-sm font-medium  dark:text-white">Password</label>
                         <input value={ newAccount.user_password }
                             onChange={ handleInputChange } type="password" name='user_password' id="last_name" class="bg-gray-50  border border-[#6838ec] focus:border-[#6838ec] outline-none text-gray-900 text-sm rounded-lg block w-full p-2.5" placeholder="" required />
+                    </div>
+                    <div className="w-full  rounded-lg ">
+                        <label htmlFor="select" className="block mb-2 text-sm font-medium text-[#6838ec]">
+                            Select user type
+                        </label>
+                        <select
+                            value={ newAccount.is_admin }
+                            onChange={ handleInputChange }
+                            name='is_admin'
+
+                            className="w-full bg-gray-50 text-gray-900 text-sm  border rounded-lg p-2.5 border-[#6838ec] focus:ring-[#6838ec] focus:border-[#6838ec] outline-none sm:text-sm"
+                        >
+
+
+                            <option class="px-4 py-3 flex items-center font-medium text-gray-900 whitespace-nowrap" value={ 0 }>Not admin
+                            </option>
+                            <option class="px-4 py-3 flex items-center font-medium text-gray-900 whitespace-nowrap" value={ 1 }>
+                                Admin
+                            </option>
+
+
+                        </select>
                     </div>
                     <div className='w-[600px]'>
                         <label htmlFor="" className="text-[#6838ec] block mb-2 text-sm font-medium dark:text-white">Bio</label>

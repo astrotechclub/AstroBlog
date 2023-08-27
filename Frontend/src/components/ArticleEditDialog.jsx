@@ -125,6 +125,9 @@ const ArticleEditDialog = ({ selectedArticle, isOpen, onClose, setArticles, setS
                 return;
             }
 
+            setAlertMessage(`Article ${res.data.title} saved successfully`)
+            setShowAlert(true);
+
             const userIndex = articles.findIndex(user => user.id === selectedArticle.id);
             if (userIndex !== -1) {
                 const updatedUsers = [...articles];
@@ -139,8 +142,7 @@ const ArticleEditDialog = ({ selectedArticle, isOpen, onClose, setArticles, setS
                 setAllArticles(updatedUsers);
             }
 
-            setAlertMessage(`Article ${res.data.title} saved successfully`)
-            setShowAlert(true);
+            
 
         } catch (err) {
             console.log(err);
