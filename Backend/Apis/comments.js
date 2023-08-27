@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllComments, getArticleComments, AddComment, getMaxComments } = require("../Controllers/commentsController");
+const {deleteComment, getAllOfComments, getAllComments, getArticleComments, AddComment, getMaxComments } = require("../Controllers/commentsController");
 const checkArticleExistance = require("../Middlewares/checkArticleExistance");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
@@ -18,6 +18,21 @@ router.route("/:id-:max")
         const result = await getMaxComments(id, max);
         return res.send(result);
     });
+
+router.route('/all').get(async (req, res, next) => {
+    const comments = await getAllOfComments();
+    return res.send(comments);
+})
+
+router.delete('/delete/:id', async (req, res, next) => {
+    try {
+        const user = await deleteComment(req.params.id);
+        console.log(req.params.id);
+        return res.json(user);
+    } catch (error) {
+        return next(error);
+    }
+});
 
 router.route("/:id")
     .get(checkArticleExistance, async (req, res, next) => {

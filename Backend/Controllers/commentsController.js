@@ -15,6 +15,18 @@ async function getAllComments() {
     return rows;
 }
 
+async function deleteComment(id) {
+    const [result] = await pool.query("DELETE FROM comment WHERE id = ?", [id]);
+    return result;
+}
+
+
+
+async function getAllOfComments() {
+    const [rows] = await pool.query("SELECT c.id as id, c.article as articleId, c.user as userId, c.date_time as date_time, comment_text , u.email , u.profile_pic, u.fullname as username , a.article_img as article_img , a.title as title from comment c join user u on u.id = c.user join article a on a.id = c.article  order by date_time desc");
+    return rows;
+}
+
 async function getArticleComments(id) {
     const [rows] = await pool.query("SELECT c.id ,article,u.id as user_id, u.fullname as user_name , u.nb_publications as user_publications ,u.nb_likes as user_likes , u.profile_pic as user_pic , DATE_FORMAT(date_time, '%M %e, %Y') as date , DATE_FORMAT(date_time, '%H:%i') as time  , comment_text as text from comment as c join user u on u.id = c.user where article = ? order by date_time desc", [id]);
     return rows;
@@ -43,4 +55,4 @@ async function getMaxComments(id, max) {
     return rows;
 }
 
-module.exports = { getAllComments, getArticleComments, AddComment, getMaxComments };
+module.exports = {deleteComment, getAllOfComments, getAllComments, getArticleComments, AddComment, getMaxComments };

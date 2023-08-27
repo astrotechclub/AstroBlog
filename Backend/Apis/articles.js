@@ -1,13 +1,17 @@
 const express = require("express");
-const { getAllArticles, getArticleWithContent, createArticle, updateLikes, getIfLikeArticle, updateDislikes, getIfDislikeArticle, getTopArticles, getUserArticles, getMyArticles, getCommunityArticles } = require("../Controllers/articlesController");
+const { edit,createArticleAdmin, deleteArticle, getAllArticles, getArticleWithContent, createArticle, updateLikes, getIfLikeArticle, updateDislikes, getIfDislikeArticle, getTopArticles, getUserArticles, getMyArticles, getCommunityArticles, getAllOfArticles, getNumArticlesPerCommunity } = require("../Controllers/articlesController");
 const checkArticleExistance = require("../Middlewares/checkArticleExistance");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+const multer = require("multer");
+const upload = multer({ dest: "AllPictures" });
+const fs = require("fs");
+const path = require("path");
 
 router.route("/")
     .get(async (req, res, next) => {
         const articles = await getAllArticles();
-        return res.send({ articles: articles, userId: req.userId });
+        return res.send({ articles });
     })
     .post(async (req, res, next) => {
         const token = req.cookies.token;
@@ -29,6 +33,39 @@ router.route("/")
             }
         );
     });
+
+
+router.route("/add")
+    .post(upload.single('article_img'), async (req, res, next) => {
+        const article = await createArticleAdmin(req.body, req.file);
+        return res.send(article);
+    });
+
+router.route('/edit').put(upload.single('article_img'), async (req, res, next) => {
+    const article = await edit(req.body, req.file);
+    return res.send(article);
+});
+
+router.route('/all').get(async (req, res, next) => {
+    const articles = await getAllOfArticles();
+    return res.send(articles);
+})
+
+
+router.route('/stats').get(async (req, res, next) => {
+    const articles = await getNumArticlesPerCommunity();
+    return res.send(articles);
+})
+
+router.delete('/delete/:id', async (req, res, next) => {
+    try {
+        const user = await deleteArticle(req.params.id);
+        console.log(req.params.id);
+        return res.json(user);
+    } catch (error) {
+        return next(error);
+    }
+});
 
 router.route("/update_likes/:id")
     .post(async (req, res, next) => {

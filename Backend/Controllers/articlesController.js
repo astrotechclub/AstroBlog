@@ -10,6 +10,20 @@ const pool = mysql.createPool({
     database: process.env.MYSQL_DATABASE
 }).promise();
 
+
+
+
+
+async function getNumArticlesPerCommunity(id) {
+    const [result] = await pool.query("SELECT c.community_name, COUNT(a.id) AS num_articles FROM COMMUNITY c LEFT JOIN ARTICLE a ON c.id = a.community GROUP BY c.id, c.community_name");
+    return result;
+}
+
+async function deleteArticle(id) {
+    const [result] = await pool.query("DELETE FROM article WHERE id = ?", [id]);
+    return result;
+}
+
 async function getAllArticles() {
     const [rows] = await pool.query("SELECT R.id, title, description,date_time, date, time, img, comments, article_likes , article_dislikes,user_id , user_name, user_profile, user_likes, user_publications, c.community_name , c.id as community_id , c.profile_img as community_profile FROM(SELECT a.id, title, article_description as description,date_time, DATE_FORMAT(date_time, '%M %e, %Y') as date, DATE_FORMAT(date_time, '%H:%i') as time, article_img as img, nb_comments as comments, a.nb_likes as article_likes , nb_dislikes as article_dislikes, fullname as user_name,u.id as user_id, profile_pic as user_profile, u.nb_likes as user_likes, nb_publications as user_publications, community  FROM article a join user u on a.author = u.id) as R join community c on c.id = R.community order by date_time  desc");
     let articles = [];
@@ -21,6 +35,49 @@ async function getAllArticles() {
         articles.push(row);
     }
     return articles;
+}
+
+
+
+
+async function createArticleAdmin(article, article_img) {
+    let insertData = [
+        article.title,
+        article_img.filename,
+        article.article_description,
+        article.content,
+        article.author,
+        article.community
+    ]
+    const [result] = await pool.query("INSERT INTO ARTICLE (title , article_img , article_description , content , author , community) VALUES (?,?,?,?,?,?)", insertData);
+    const insertedId = result.insertId;
+    const [rows] = await pool.query("SELECT a.id as id, u.email as email, u.fullname as username, u.id as user_id, c.id as community_id, u.profile_pic as profile_pic, community, title, article_description, date_time, article_img, a.nb_comments as nb_comments, a.nb_likes as nb_likes, a.nb_dislikes as nb_dislikes, content, c.community_name as community_name, c.profile_img as community_pic FROM ARTICLE a JOIN USER u ON a.author = u.id JOIN COMMUNITY c ON a.community = c.id WHERE a.id = ?", insertedId);
+    return rows[0];
+}
+
+
+
+async function edit(article, article_img) {
+
+    let insertData = [
+        article.title,
+        article_img ? article_img.filename : article.article_img,
+        article.article_description,
+        article.content,
+        article.author,
+        article.community,
+        article.id
+    ]
+    const [result] = await pool.query("UPDATE ARTICLE SET title = ?, article_img = ?, article_description = ?, content = ?, author = ?, community = ? WHERE id = ?; ", insertData);
+    const insertedId = article.id;
+    const [rows] = await pool.query("SELECT a.id as id, u.email as email, u.fullname as username, u.id as user_id, c.id as community_id, u.profile_pic as profile_pic, community, title, article_description, date_time, article_img, a.nb_comments as nb_comments, a.nb_likes as nb_likes, a.nb_dislikes as nb_dislikes, content, c.community_name as community_name, c.profile_img as community_pic FROM ARTICLE a JOIN USER u ON a.author = u.id JOIN COMMUNITY c ON a.community = c.id WHERE a.id = ?", insertedId);
+    return rows[0];
+}
+
+
+async function getAllOfArticles() {
+    const [rows] = await pool.query("SELECT a.id as id, u.email as email,u.fullname as username, u.id as user_id, c.id as community_id, u.profile_pic as profile_pic , community, title, article_description, date_time , article_img, a.nb_comments as nb_comments, a.nb_likes as nb_likes, a.nb_dislikes as nb_dislikes, content , c.community_name as community_name , c.profile_img as community_pic  from article a join user u on a.author = u.id join community c on a.community = c.id  order by date_time desc");
+    return rows;
 }
 
 async function getArticleFields(id) {
@@ -227,4 +284,4 @@ async function getCommunityArticles(id, max) {
     return articles;
 }
 
-module.exports = { getAllArticles, getArticle, getArticleWithContent, createArticle, updateLikes, getIfLikeArticle, updateDislikes, getIfDislikeArticle, getTopArticles, getUserArticles, getMyArticles, getCommunityArticles };
+module.exports = { edit, createArticleAdmin, getNumArticlesPerCommunity, deleteArticle, getAllOfArticles, getAllArticles, getArticle, getArticleWithContent, createArticle, updateLikes, getIfLikeArticle, updateDislikes, getIfDislikeArticle, getTopArticles, getUserArticles, getMyArticles, getCommunityArticles };

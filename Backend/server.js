@@ -40,7 +40,7 @@ app.use(cookieParser());
 app.use("/register", signup);
 app.use("/login", login);
 app.use("/refresh", refresh);
-app.use(verifyJWT);
+// app.use(verifyJWT);
 app.use("/articles", articles);
 app.use("/comments", comments);
 app.use("/communities", communities);

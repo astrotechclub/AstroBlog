@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getUserProfile, updateUser, updateUserPicture, getUserProfileByName } = require("../Controllers/usersControllers");
+const {editUserWithPicture,editUser, addNewUserAdmin, getUserProfile, updateUser, updateUserPicture, getUserProfileByName, getAllUsers, deleteUser, getStatsUsersAdmin, getStatsUsersCategory } = require("../Controllers/usersControllers");
 const validateInputs = require("../Middlewares/validateInputs");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
@@ -30,6 +30,31 @@ router.route("/mine")
             }
         );
     });
+
+router.route("/all").get(async (req, res, next) => {
+    const users = await getAllUsers();
+    return res.send(users);
+})
+
+router.route("/stats/admin").get(async (req, res, next) => {
+    const users = await getStatsUsersAdmin();
+    return res.send(users);
+})
+
+router.route("/stats/category").get(async (req, res, next) => {
+    const users = await getStatsUsersCategory();
+    return res.send(users);
+})
+
+router.delete('/delete/:id', async (req, res, next) => {
+    try {
+        const user = await deleteUser(req.params.id);
+        console.log(req.params.id);
+        return res.json(user);
+    } catch (error) {
+        return next(error);
+    }
+});
 
 router.route("/update")
     .post(validateInputs, async (req, res, next) => {
@@ -78,6 +103,23 @@ router.route("/updatePicture")
             }
         );
     });
+
+router.route('/add').post(upload.single('profile_pic'), async (req, res, next) => {
+    const user = await addNewUserAdmin(req.body, req.file);
+    console.log(user);
+    return res.send(user);
+});
+
+router.route('/editUser').put(upload.single('profile_pic'), async (req, res, next) => {
+    const user = await editUserWithPicture(req.body, req.file);
+    console.log(user);
+    return res.send(user);
+});
+
+// router.route('/editUser').put(async (req, res, next) => {
+//     const user = await editUser(req.body);
+//     return res.send(user);
+// });
 
 router.route("/:id")
     .get(async (req, res, next) => {
